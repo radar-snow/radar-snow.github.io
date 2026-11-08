@@ -2042,6 +2042,259 @@ window.RADAR_INT = {
           "url": "https://www.servicenow.com/docs/r/governance-risk-compliance/create-emergency-notification-everbridge.html"
         }
       ]
+    },
+    {
+      "id": "armis-ew",
+      "module": "secops",
+      "name": "Armis Early Warning (USEM)",
+      "area": "VR / USEM",
+      "what": "Enriquece o Central Vulnerability Database (CVDB) da USEM com inteligência de exploração iminente da Armis (honeypots, OSINT, pesquisa operacional), para priorizar CVEs antes de virarem ataque, mesmo quando o CVSS não reflete o risco real.",
+      "app": "Early Warning for Security Exposure Management",
+      "builtBy": "ServiceNow (\"powered by Armis\")",
+      "compat": [
+        "Exige Unified Security Exposure Management (Vulnerability Response v30.x) instalada e configurada.",
+        "Exige o plugin Vulnerability Integration Framework ativo.",
+        "Aparece no Security Exposure Management Workspace junto com outros enriquecimentos, como o CISA KEV."
+      ],
+      "vendorSide": [
+        "Conta no <strong>Armis Intelligence Center</strong> (https://ic.armis.com). O login é por link enviado ao e-mail.",
+        "Em <strong>API Credentials</strong>, revele e copie a API key. A URL da API é fixa e específica da sua organização."
+      ],
+      "snSide": [
+        "<code>sn_sec_cvd.read</code> para ver os registros de saúde e de CVD do Early Warning.",
+        "<code>sn_sec_calculator.admin</code> para incluir o Early Warning nas regras de risco.",
+        "A tabela <code>sn_vul_ew_cvd_attributes</code> não tem escrita para nenhum papel: a integração cuida dela."
+      ],
+      "setup": [
+        {
+          "title": "Ativar a integração",
+          "path": "Filter Navigator: sn_sec_int_integration.LIST &gt; Early Warning for Security Exposure Management &gt; Integration Instances",
+          "steps": [
+            "Em <strong>Integration Instance Parameters</strong>, preencha <code>armis_api_url</code> (Value) e <code>armis_api_key</code> (Password value).",
+            "Confirme que a ingestão delta (incremental) está ligada: ela só processa registros novos ou alterados.",
+            "Selecione <strong>Save and Activate</strong>. A sincronização começa na próxima execução agendada."
+          ]
+        },
+        {
+          "title": "Usar na priorização",
+          "path": "Workspaces &gt; Security Exposure Management Workspace &gt; Administration &gt; Risk calculators &gt; Review",
+          "steps": [
+            "Abra a regra de risco (ex.: Default Risk Rule) e selecione <strong>+ New criteria</strong>.",
+            "Reference table: Vulnerable Item --&gt; Vulnerability. Table: National Vulnerability Database Entry. Field: digite <code>armis</code> e escolha o flag de Early Warning ou o Admiralty score.",
+            "Defina o <strong>Weightage %</strong> e selecione <strong>Update</strong>. Os campos só aparecem depois de pelo menos uma execução da integração."
+          ]
+        }
+      ],
+      "validate": [
+        "O flag <code>ew_exists</code> aparece na lista e no formulário do CVDB.",
+        "Acompanhe o histórico de execuções e a saúde da ingestão na página de overview da integração."
+      ],
+      "issues": [
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "problem": "Campos do Early Warning não aparecem no construtor de critérios da regra de risco",
+          "fix": "Eles só ficam disponíveis depois que o plugin está instalado e <strong>pelo menos uma execução</strong> da integração foi concluída.",
+          "src": {
+            "title": "Add Early Warning criteria to a risk rule",
+            "url": __DOCS + "add-armis-early-warning-risk-rule.html"
+          },
+          "added": "2026-11-08"
+        }
+      ],
+      "docs": [
+        {
+          "title": "Early Warning for Security Exposure Management",
+          "url": __DOCS + "armis-early-warning-integration.html"
+        },
+        {
+          "title": "Set up requirements (Armis Intelligence Center)",
+          "url": __DOCS + "early-warning-integration-setup.html"
+        },
+        {
+          "title": "Configure the integration",
+          "url": __DOCS + "configure-early-warning-integration.html"
+        },
+        {
+          "title": "Add Early Warning criteria to a risk rule",
+          "url": __DOCS + "add-armis-early-warning-risk-rule.html"
+        },
+        {
+          "title": "Early Warning CVD Attributes field reference",
+          "url": __DOCS + "early-warning-cvd-attributes.html"
+        }
+      ]
+    },
+    {
+      "id": "armis-sgc",
+      "module": "secops",
+      "name": "Armis Service Graph Connector (CMDB)",
+      "area": "CMDB / ativos",
+      "what": "Carrega no CMDB os dispositivos descobertos pela Armis: gerenciados, não gerenciados, IoT, médicos e de OT. É a base para casar vulnerabilidades e incidentes com CIs e donos.",
+      "app": "Service Graph Connector for Armis",
+      "builtBy": "Armis (no programa Service Graph Connector desde 2020; a Armis agora é da ServiceNow)",
+      "compat": [
+        "Pela ficha da Store: exige assinatura ITOM Visibility ou ITOM Discovery (baseada em Subscription Units).",
+        "Dependências citadas na Store: IntegrationHub ETL 2.1.1+, CMDB CI Class Models 1.71.0+ e Integration Commons for CMDB 2.12.0+.",
+        "Existe um app separado na Store, \"Import Armis Device Vulnerabilities into ServiceNow\", compatível com o conector, para levar vulnerabilidades à VR."
+      ],
+      "vendorSide": [
+        "Acesso à API do Armis Centrix (credenciais de integração).",
+        "Dados de dispositivos limpos na Armis (ativos offline ou inválidos atrapalham os imports agendados)."
+      ],
+      "snSide": [
+        "Administrador de CMDB/ITOM para instalar e configurar o conector."
+      ],
+      "setup": [
+        {
+          "title": "Visão geral",
+          "steps": [
+            "Instale o app da Store com as dependências.",
+            "Configure a conexão com o Armis Centrix pelo guided setup do conector.",
+            "Revise as configurações de classificação, que permitem que o sistema operacional informado pela Armis ajuste dinamicamente a classe de destino no CMDB.",
+            "<em>Observação:</em> não encontrei o passo a passo detalhado na documentação pública da ServiceNow; siga o guia do app na Store."
+          ]
+        }
+      ],
+      "validate": [
+        "Confira os CIs criados ou atualizados e a classe atribuída a cada tipo de dispositivo."
+      ],
+      "issues": [
+        {
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-08",
+          "problem": "Import agendado de Devices falha com \"InvalidPathException: Could not find path in stream: $.data.results\" (o manual funciona)",
+          "fix": "Sem solução confirmada. Sugestões da única resposta (de outro conector, não da Armis): manter o conector sem customização, limpar registros offline ou inválidos na Armis e não criar identificadores novos de classes filhas. A mensagem de ETL \"no import set\" somente leitura é normal.",
+          "src": {
+            "title": "Armis Service Graph Connector Error (Community)",
+            "url": "https://www.servicenow.com/community/service-graph-connectors-forum/armis-service-graph-connector-error/m-p/3340760"
+          },
+          "added": "2026-11-08"
+        },
+        {
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-03",
+          "problem": "Ativo de OT vira CI, mas o registro \"OT Device details\" não é criado",
+          "fix": "Pergunta sem resposta na Community. <em>Sugestão:</em> verifique se o plugin de Operational Technology está instalado e se a classe de destino é uma classe de OT.",
+          "src": {
+            "title": "Service Graph Connector - Armis to ServiceNow integration (Community)",
+            "url": "https://www.servicenow.com/community/service-graph-connectors-forum/service-graph-connector-armis-to-servicenow-integration/m-p/3204534"
+          },
+          "added": "2026-11-08"
+        }
+      ],
+      "docs": [
+        {
+          "title": "Service Graph Connector for Armis (Store)",
+          "url": "https://store.servicenow.com/store/app/e43a2fe21b246a50a85b16db234bcb55"
+        },
+        {
+          "title": "Import Armis Device Vulnerabilities into ServiceNow (Store)",
+          "url": "https://store.servicenow.com/store/app/6d4bef2a1b246a50a85b16db234bcb6c"
+        }
+      ]
+    },
+    {
+      "id": "veza-aict",
+      "module": "irm",
+      "name": "Veza Access Intelligence (AI Control Tower)",
+      "area": "IRM · Governança de IA",
+      "what": "Mostra no mapa de agentes do AI Control Tower o risco e a severidade de acesso de cada agente de IA governado, calculados pela Veza. É um conector de enriquecimento: não importa ativos novos.",
+      "app": "Conector Veza do AI Control Tower",
+      "builtBy": "ServiceNow",
+      "compat": [
+        "Suporta agentes hospedados em AWS, Gemini Enterprise Agent Platform, Azure AI Foundry e Salesforce.",
+        "ServiceNow e Veza mantêm conexões separadas com cada hyperscaler: as duas pontas precisam estar configuradas.",
+        "O conector da Veza só aceita OAuth 2.0."
+      ],
+      "vendorSide": [
+        "No tenant Veza, em Administration &gt; API Keys: um <strong>OAuth 2.0 client</strong> (client credential) e/ou um <strong>OAuth 2.0 app</strong> (authorization code), com escopo <code>servicenow:aict:read</code>. O secret só aparece uma vez.",
+        "No app OAuth, a base URL é a URL da sua instância.",
+        "Integrações da Veza com os mesmos hyperscalers configurados no AI Control Tower."
+      ],
+      "snSide": [
+        "<code>admin</code> para criar os Application Registries de OAuth.",
+        "<code>sn_ai_governance.ai_steward</code> para criar a conexão com a Veza."
+      ],
+      "setup": [
+        {
+          "title": "OAuth do lado da ServiceNow",
+          "path": "All &gt; System OAuth &gt; Application Registries",
+          "steps": [
+            "Crie um registry Client Credentials (com o client da Veza) e/ou um Authorization Code (com o app da Veza, com PKCE e redirect para /oauth_redirect.do).",
+            "Use os endpoints /oauth/authorize e /oauth/token do seu tenant Veza.",
+            "Defina o <strong>refresh token lifespan em 2.592.000 segundos (30 dias)</strong> nos dois.",
+            "Vincule ao connection alias pré-fornecido <strong>SN AI Security Veza Connector</strong> (um registry por vez)."
+          ]
+        },
+        {
+          "title": "Criar a conexão",
+          "path": "AI Control Tower &gt; Settings &gt; Integrations &gt; Connectors",
+          "steps": [
+            "Configure primeiro os conectores dos hyperscalers (os mesmos configurados na Veza).",
+            "Em Available connectors, selecione o tile <strong>Veza</strong> (security connectors) e confirme Provider type = Security.",
+            "Marque as duas confirmações (configuração do lado Veza e do lado ServiceNow) e selecione <strong>Validate Connection</strong>."
+          ]
+        }
+      ],
+      "validate": [
+        "Selecione um agente no mapa e abra a aba <strong>Access intelligence</strong> para ver o risk score. Se o token expirou, use <strong>Re-Authenticate</strong> na aba."
+      ],
+      "issues": [
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "problem": "Token deixa de renovar depois de um tempo",
+          "fix": "O refresh token lifespan na ServiceNow precisa ser igual ao da Veza (2.592.000 s). Se o valor da ServiceNow for maior, a renovação falha depois que o token da Veza expira.",
+          "src": {
+            "title": "Configure OAuth for Veza in ServiceNow",
+            "url": "https://www.servicenow.com/docs/r/intelligent-experiences/gov-sec-configure-veza-servicenow.html"
+          },
+          "added": "2026-11-08"
+        },
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "problem": "Agente aparece no mapa, mas a aba Access intelligence fica vazia",
+          "fix": "O agente precisa ser um ativo governado com <code>external_ref_id</code> preenchido e <code>model_category = Agentic AI</code>.",
+          "src": {
+            "title": "Configure Veza access intelligence in the agent map",
+            "url": "https://www.servicenow.com/docs/r/intelligent-experiences/gov-sec-configure-veza-access-intelligence.html"
+          },
+          "added": "2026-11-08"
+        },
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "problem": "Botão Validate Connection desabilitado",
+          "fix": "Ele só habilita depois que as duas caixas de confirmação (configuração Veza e configuração ServiceNow) estão marcadas.",
+          "src": {
+            "title": "Create an AI connection for Veza access intelligence",
+            "url": "https://www.servicenow.com/docs/r/intelligent-experiences/aict-create-ai-connection-veza.html"
+          },
+          "added": "2026-11-08"
+        }
+      ],
+      "docs": [
+        {
+          "title": "Configure Veza access intelligence in the agent map",
+          "url": "https://www.servicenow.com/docs/r/intelligent-experiences/gov-sec-configure-veza-access-intelligence.html"
+        },
+        {
+          "title": "Configure OAuth in Veza",
+          "url": "https://www.servicenow.com/docs/r/intelligent-experiences/gov-sec-configure-veza-oauth.html"
+        },
+        {
+          "title": "Configure OAuth for Veza in ServiceNow",
+          "url": "https://www.servicenow.com/docs/r/intelligent-experiences/gov-sec-configure-veza-servicenow.html"
+        },
+        {
+          "title": "Create an AI connection for Veza access intelligence",
+          "url": "https://www.servicenow.com/docs/r/intelligent-experiences/aict-create-ai-connection-veza.html"
+        }
+      ]
     }
   ]
 };

@@ -166,6 +166,19 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 .idx a:hover{background:var(--hover)}
 .idx .a{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
 @media (max-width:700px){ .cols{grid-template-columns:minmax(0,1fr)} }
+/* Armis & Veza */
+.grid.avonly{grid-template-columns:minmax(0,1fr)}
+.avlede{font-size:1.05rem;color:var(--muted);max-width:75ch;margin:0}
+.avgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.avco h3{font-size:1.4rem}
+.avco p{margin:0}
+.avtable td{vertical-align:top}
+.avtable td:first-child{white-space:normal;min-width:110px}
+.avwhat{color:var(--muted);font-size:.92rem}
+.avl{font-size:.88rem;color:var(--muted);max-width:240px}
+.avlink{font-size:.88rem;font-weight:600}
+.feed li.fut{opacity:.85}
+@media (max-width:760px){ .avgrid{grid-template-columns:minmax(0,1fr)} }
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px;text-align:center;color:var(--muted)}
 .notes{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;margin:0}
 
@@ -205,6 +218,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     <nav class="tabs" role="tablist" aria-label="Seções">
       <button type="button" role="tab" id="tab-news" data-view="news" aria-selected="true">Novidades</button>
       <button type="button" role="tab" id="tab-int" data-view="int" aria-selected="false">Integrações<span class="count" id="intcount"></span></button>
+      <button type="button" role="tab" id="tab-av" data-view="av" aria-selected="false">Armis &amp; Veza</button>
     </nav>
   </header>
 
@@ -235,6 +249,10 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
       </section>
       <p class="method" id="irev"></p>
     </aside>
+  </div>
+
+  <div class="grid avonly" id="avGrid" hidden>
+    <main id="avview" style="display:flex;flex-direction:column;gap:22px"></main>
   </div>
 
   <div class="grid" id="newsGrid">
@@ -270,6 +288,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 
 <script src="editions.js"></script>
 <script src="integrations.js"></script>
+<script src="armis-veza.js"></script>
 <script>
 (function(){
   var D = window.RADAR || {editions:[],events:[]};
@@ -440,11 +459,31 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     $("irev").innerHTML='<strong>Revisado em '+fmt(I.reviewed)+'</strong> com base na documentação da família '+I.release+'. Versões e telas mudam: confira o link oficial de cada passo.';
     $("intcount").textContent=I.items.length;
   }
+  /* ---------- Armis & Veza ---------- */
+  var AV = window.RADAR_AV || null;
+  var AVST = {"disponível":"st-ok","previsto":"st-work","anunciado":"st-lim","integração existente":"st-kb"};
+  function renderAV(){
+    if(!AV){ $("avview").innerHTML='<div class="empty">Dados indisponíveis.</div>'; return; }
+    var co=AV.companies.map(function(c){ return '<article class="avco"><div class="ahead"><span class="tag t-'+c.module+'">'+c.tag+'</span></div><h3>'+c.name+'</h3><p>'+c.what+'</p><dl class="row"><dt>Compra</dt><dd>'+c.deal+'</dd><dt>Hoje</dt><dd>'+c.today+'</dd><dt>Onde encaixa</dt><dd><ul>'+c.fits.map(function(f){return '<li>'+f+'</li>'}).join("")+'</ul></dd></dl><div class="src"><span class="label">Fonte</span><a href="'+c.src.url+'" target="_blank" rel="noopener">'+c.src.title+'</a></div></article>'; }).join("");
+    var order={"disponível":0,"integração existente":1,"previsto":2,"anunciado":3};
+    var st=AV.status.slice().sort(function(a,b){return order[a.status]-order[b.status]}).map(function(s){
+      return '<tr><td><span class="st '+(AVST[s.status]||'st-kb')+'">'+s.status+'</span><br><span class="when">'+s.when+'</span></td><td><strong>'+s.name+'</strong><br><span class="avwhat">'+s.what+'</span>'+(s.int?'<br><a href="#int-'+s.int+'" data-iopen="'+s.int+'" class="avlink">Ver guia de instalação →</a>':'')+'</td><td class="avl">'+s.link+'</td><td><a href="'+s.src+'" target="_blank" rel="noopener">fonte</a></td></tr>';
+    }).join("");
+    var tl=AV.timeline.map(function(t){ var p=t.date.split("-"); var d=p.length===3?p[2]+"/"+p[1]+"/"+p[0]:p[1]+"/"+p[0]; var fut=t.date>"2026-11-08"; return '<li class="'+(fut?'fut':'')+'"><span class="fd">'+d+'</span><span><a href="'+t.src+'" target="_blank" rel="noopener">'+t.title+'</a>'+(fut?' <span class="st st-work">previsto</span>':'')+'</span></li>'; }).join("");
+    var uc=AV.useCases.map(function(u){ return '<div class="sug"><span class="label">Sugestão · '+(u.module==='irm'?'IRM':'SecOps')+'</span><strong>'+u.title+'</strong><br>'+u.text+'</div>'; }).join("");
+    var qs='<ul>'+AV.questions.map(function(q){return '<li>'+q+'</li>'}).join("")+'</ul><div class="src"><span class="label">Fonte da pergunta em aberto</span><a href="'+AV.questionsSrc.url+'" target="_blank" rel="noopener">'+AV.questionsSrc.title+'</a></div>';
+    $("avview").innerHTML='<p class="lede avlede">'+AV.lede+'</p><div class="avgrid">'+co+'</div>'+
+      '<section class="group"><div class="ghead" style="--c:var(--fg)"><h2>Disponível vs. prometido</h2><span class="label">'+AV.status.length+' itens</span></div><div class="tbl"><table class="events avtable"><thead><tr><th>Status</th><th>Produto / capacidade</th><th>Ligação com Armis/Veza</th><th></th></tr></thead><tbody>'+st+'</tbody></table></div><p class="hnote">O anúncio de 04/08/2026 diz que as soluções são \"powered by\" Armis e Veza no geral, mas não liga cada produto a uma das duas. Onde a ligação não é explícita, a coluna diz isso.</p></section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--fg)"><h2>Linha do tempo</h2></div><div class="feed"><ul>'+tl+'</ul></div></section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--sug)"><h2>Como aproveitar</h2></div>'+uc+'</section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--warn)"><h2>Perguntas em aberto</h2></div><article>'+qs+'</article></section>'+
+      '<p class="notes">Atualizado em '+fmt(AV.updated)+'. Fontes: newsroom e investor relations da ServiceNow, documentos da SEC, docs oficiais (release Brazil), ServiceNow Store e Community.</p>';
+  }
   function setView(v){
-    var isInt=v==="int";
-    $("intGrid").hidden=!isInt; $("newsGrid").hidden=isInt;
-    $("tab-int").setAttribute("aria-selected",String(isInt)); $("tab-news").setAttribute("aria-selected",String(!isInt));
-    if(isInt){ renderInt(); setHash(ist.open?"#int-"+ist.open:"#integracoes"); } else { render(); }
+    var isInt=v==="int", isAV=v==="av";
+    $("intGrid").hidden=!isInt; $("avGrid").hidden=!isAV; $("newsGrid").hidden=isInt||isAV;
+    $("tab-int").setAttribute("aria-selected",String(isInt)); $("tab-av").setAttribute("aria-selected",String(isAV)); $("tab-news").setAttribute("aria-selected",String(!isInt&&!isAV));
+    if(isInt){ renderInt(); setHash(ist.open?"#int-"+ist.open:"#integracoes"); } else if(isAV){ renderAV(); setHash("#armis-veza"); } else { render(); }
   }
   function openInt(id){
     ist.open=id; ist.area="all"; ist.q=""; $("iq").value=""; setView("int");
@@ -463,6 +502,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 
   function fromHash(){
     var h=location.hash.replace("#","");
+    if(h==="armis-veza") return "av";
     if(h==="integracoes"){ ist.open=null; return "int"; }
     if(/^int-[a-z0-9-]+$/.test(h)){ ist.open=h.slice(4); return "int"; }
     if(h==="arquivo") state.ed="all";
