@@ -3,7 +3,13 @@
 // Uso: node build.js
 const fs = require('fs');
 const path = require('path');
-const src = fs.readFileSync(path.join(__dirname, 'boletim-secops-irm.html'), 'utf8');
+const crypto = require('crypto');
+// Acrescenta ?v=<hash do conteúdo> aos scripts de dados, para o navegador não usar versões antigas em cache.
+const src = fs.readFileSync(path.join(__dirname, 'boletim-secops-irm.html'), 'utf8')
+  .replace(/<script src="([a-z-]+\.js)"><\/script>/g, (m, f) => {
+    const h = crypto.createHash('md5').update(fs.readFileSync(path.join(__dirname, f))).digest('hex').slice(0, 8);
+    return '<script src="' + f + '?v=' + h + '"></script>';
+  });
 const head = [
   '<!doctype html>',
   '<html lang="pt-BR">',

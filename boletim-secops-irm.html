@@ -537,6 +537,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
   });
 
   renderEvents();
+  $("intcount").textContent=I.items.length;
   var v0=fromHash(); setView(v0);
   if(v0==="int" && ist.open){ var el0=$("int-"+ist.open); if(el0){ el0.open=true; setTimeout(function(){ el0.scrollIntoView({block:"start"}); },50); } }
 })();
