@@ -373,7 +373,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
       }
       var f=filtering()?null:featuredOf(ed);
       if(f){
-        html+='<div class="featured"><span class="label">Tutorial da semana · '+f.it.subs.join(" · ")+'</span>'+howtoHtml(f.h,true)+'</div>';
+        html+='<div class="featured"><span class="label">Tutorial da semana · '+f.it.subs.join(" · ")+'</span>'+howtoHtml(f.h,false)+'</div>';
       }
     }
     html+= list.length ? groups(list, all) : '<div class="empty">Nenhum item com esses filtros. Tente outro submódulo ou limpe a busca.</div>';
