@@ -60,6 +60,30 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "added": "2026-11-09",
+          "level": "comunidade",
+          "status": "contorno",
+          "date": "2026-08",
+          "problem": "\"Invalid response code received from TenableSCPluginIntegration: 403. Access denied.\" no job de plugins do Tenable.sc (relatos em instâncias Australia, desde jul/2026)",
+          "fix": "Solução aceita na thread (de usuário, não de funcionário ServiceNow): a Tenable lançou o VPR 2.0 no início de julho, e o appliance do Tenable.sc ficou sem espaço em disco. Peça ao time da Tenable para checar os logs do appliance e aumentar <code>/tmp</code> e <code>/var/tmp</code> (o autor cita recomendação da Tenable de pelo menos 4 GB cada). Depois disso pode aparecer \"Invalid response code received received from TenableSCPluginIntegration: 0\" até o backlog ser importado. Outro usuário relatou o mesmo 403 logo após o upgrade para Australia, com credenciais novas, e abriu caso no suporte, ainda sem resposta na thread. <em>Sugestão:</em> confira também se o MID Server está ativo e se o usuário tem papel Security Analyst ou Manager no Tenable.sc.",
+          "src": {
+            "title": "TenableSCPluginIntegration (Community, jul–ago/2026; sem resposta de funcionário ServiceNow)",
+            "url": "https://www.servicenow.com/community/secops-forum/tenablescpluginintegration/td-p/3570033"
+          }
+        },
+        {
+          "added": "2026-11-09",
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-11",
+          "problem": "\"Invalid response code received from TenableIOVulnerabilitiesIntegration: 401\" com \"At least one import queue entry is in error. No more data to process at this time.\" na integração de fixed vulnerabilities do Tenable.io",
+          "fix": "A thread não tem resposta. <em>Sugestão:</em> 401 costuma indicar chave de API inválida ou expirada. Gere novas Access/Secret Keys no Tenable.io, atualize a credencial e rode a integração sob demanda.",
+          "src": {
+            "title": "Tenable.io fixed vulnerabilities integration failure (Community, nov/2025)",
+            "url": "https://www.servicenow.com/community/ask-the-experts-forum/tenable-io-fixed-vulnerabilities-integration-failure/m-p/3425955"
+          }
+        },
+        {
           "level": "oficial",
           "problem": "Timeout ou \"invalid credentials\" no Setup Assistant",
           "fix": "As integrações expiram em 5 minutos sem resposta, com ou sem MID Server. A doc manda conferir credenciais e Instance URL no Setup Assistant.",
@@ -226,6 +250,18 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "added": "2026-11-09",
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-07",
+          "problem": "Job \"Wiz Fetch Vulnerabilities - On Demand\" cria detecções, mas nenhum vulnerable item é criado (app antigo \"Wiz Integration for Security Operations\")",
+          "fix": "A thread não tem resposta. O relato é do app antigo feito pela Wiz, que a ServiceNow substituiu pelo \"Vulnerability Response Integration with Wiz\". <em>Sugestão:</em> se ainda estiver no app antigo, planeje a migração para o app da ServiceNow antes de investigar a fundo.",
+          "src": {
+            "title": "VR: Wiz Integration is not creating vulnerable items from detections (Community, jul/2025)",
+            "url": "https://www.servicenow.com/community/secops-forum/vr-wiz-integration-is-not-creating-vulnerable-items-from/td-p/3332256"
+          }
+        },
+        {
           "level": "servicenow",
           "problem": "Não aparecem os jobs \"Wiz Fetch Vulnerabilities - On Demand / Daily Run\"",
           "fix": "Esses processos são do app antigo feito pela Wiz. O app atual (ServiceNow) tem outros jobs e outra documentação. Use a doc nova e ignore tutoriais antigos.",
@@ -375,6 +411,18 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "added": "2026-11-09",
+          "level": "servicenow",
+          "status": "resolvido",
+          "date": "2026-04",
+          "problem": "Teste de conexão do conector nativo do Microsoft Defender no SIR falha com erro de autorização, mesmo com as permissões de API aparentemente configuradas no Azure",
+          "fix": "Causa: as permissões foram concedidas como <strong>Delegated</strong>, mas o conector usa OAuth 2.0 Client Credentials e precisa de <strong>Application</strong>. No App Registration, marque <code>SecurityIncident.Read.All</code> e <code>SecurityIncident.ReadWrite.All</code> como Application, clique em <strong>Grant admin consent</strong>, confira Client ID, Client Secret e Tenant ID na ServiceNow e rode o teste de novo.",
+          "src": {
+            "title": "Microsoft Defender connection fails due to role permissions (artigo de funcionária ServiceNow, abr/2026)",
+            "url": "https://www.servicenow.com/community/secops-articles/microsoft-defender-connection-fails-due-to-role-permissions/ta-p/3532663"
+          }
+        },
+        {
           "level": "oficial",
           "problem": "Erro \"Missing required roles\" ao validar a configuração; nada é ingerido",
           "fix": "As permissões <code>SecurityIncident.*</code> foram dadas como <strong>Delegated</strong> no Entra ID. A integração roda em segundo plano e precisa de permissões <strong>Application</strong>. Remova as Delegated, adicione como Application e conceda admin consent.",
@@ -484,6 +532,18 @@ window.RADAR_INT = {
         "Técnicas revogadas pela MITRE ficam marcadas como revoked e não podem ser usadas."
       ],
       "issues": [
+        {
+          "added": "2026-11-09",
+          "level": "comunidade",
+          "status": "contorno",
+          "date": "2024-11",
+          "problem": "Regra de auto-extração de técnicas MITRE ATT&amp;CK não preenche as técnicas em incidentes vindos do Azure Sentinel (só funciona manualmente)",
+          "fix": "Um usuário relatou que o suporte da ServiceNow (via caso HI) mandou mudar a propriedade <code>sn_sec_sentinel.sentinel_security_incident_api_version</code> para <code>2024-03-01</code>; aí táticas e técnicas passaram a vir no payload de import. A thread não confirma que o vínculo com o SIR ficou automático e não tem solução aceita.",
+          "src": {
+            "title": "Auto Technique extraction rule for Azure Sentinel (Community, fev/2024–mar/2025)",
+            "url": "https://www.servicenow.com/community/secops-forum/auto-technique-extraction-rule-for-azure-sentinel/td-p/2843446"
+          }
+        },
         {
           "level": "oficial",
           "problem": "Erro ao definir Run = Daily na coleção TAXII",

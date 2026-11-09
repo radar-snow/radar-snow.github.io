@@ -1,7 +1,7 @@
 /* Radar SecOps & IRM — acompanhamento Armis & Veza.
    status: "disponível" | "previsto" | "anunciado" | "integração existente" */
 window.RADAR_AV = {
-  updated: "2026-11-08",
+  updated: "2026-11-09",
   lede: "A ServiceNow comprou a Veza (identidades e acessos) e a Armis (visibilidade de ativos de TI, OT, IoT e dispositivos médicos) e as colocou no centro da estratégia de \"Autonomous Security\". Esta página separa o que já dá para usar do que ainda é promessa, sempre com a fonte oficial.",
   companies: [
     {
