@@ -47,6 +47,8 @@ code{font-family:var(--mono);font-size:.85em}
 .shell{max-width:1180px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
 .top{display:flex;flex-direction:column;gap:8px}
 .top p{margin:0;color:var(--muted);max-width:70ch}
+.toprow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.seg.theme button{font-size:.85rem;padding:5px 12px}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
 main{display:flex;flex-direction:column;gap:22px;min-width:0}
 aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
@@ -221,7 +223,28 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 
 <div class="shell">
   <header class="top">
-    <span class="label">ServiceNow · Security Operations & Integrated Risk Management</span>
+    <div class="toprow">
+      <span class="label">ServiceNow · Security Operations & Integrated Risk Management</span>
+      <div class="seg theme" role="group" aria-label="Tema da página">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="Tema claro">☀ Claro</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="Tema escuro">☾ Escuro</button>
+        <button type="button" data-theme-set="system" aria-pressed="true" title="Seguir o sistema">Sistema</button>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var K="radar-theme", root=document.documentElement;
+      function mark(t){ document.querySelectorAll("[data-theme-set]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-theme-set")===t)); }); }
+      function apply(t){ if(t==="light"||t==="dark") root.setAttribute("data-theme",t); else root.removeAttribute("data-theme"); mark(t); }
+      var saved=null; try{ saved=localStorage.getItem(K); }catch(e){}
+      if(saved==="light"||saved==="dark") apply(saved); else mark("system");
+      document.addEventListener("click", function(e){
+        var b=e.target.closest("[data-theme-set]"); if(!b) return;
+        var v=b.getAttribute("data-theme-set"); apply(v);
+        try{ if(v==="system") localStorage.removeItem(K); else localStorage.setItem(K,v); }catch(err){}
+      });
+    })();
+    </script>
     <h1>Radar SecOps & IRM</h1>
     <p>Novidades oficiais da ServiceNow, resumidas e com casos de uso, e um guia de instalação das integrações mais usadas. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.</p>
     <nav class="tabs" role="tablist" aria-label="Seções">
