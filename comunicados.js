@@ -55,11 +55,5 @@ window.RADAR_COM = [
       { title: "KB3142985: como funciona e como corrigir o acesso entre escopos", url: KB + "KB3142985", note: "exige login no Now Support" },
       { title: "KB2793170: proteção de dot-walking entre escopos (Australia)", url: KB + "KB2793170", note: "exige login no Now Support" }
     ]
-  },
-  {
-    date: "2026-11-13",
-    title: "Radar agora com 12 módulos",
-    text: "Entraram ITOM, APM/EA, Otto, DPM/DPR e ITAM. Cada módulo é atualizado uma vez por semana, no dia indicado no bloco.",
-    url: ""
   }
 ];
