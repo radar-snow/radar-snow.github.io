@@ -13,6 +13,11 @@ Um radar para cada módulo da ServiceNow: novidades oficiais resumidas, com caso
 | FSM | https://ilazyfeel.github.io/radar-servicenow/fsm/ |
 | HRSD | https://ilazyfeel.github.io/radar-servicenow/hrsd/ |
 | SPM | https://ilazyfeel.github.io/radar-servicenow/spm/ |
+| ITOM | https://ilazyfeel.github.io/radar-servicenow/itom/ |
+| APM/EA | https://ilazyfeel.github.io/radar-servicenow/apm-ea/ |
+| Otto | https://ilazyfeel.github.io/radar-servicenow/otto/ |
+| DPM/DPR | https://ilazyfeel.github.io/radar-servicenow/dpm-dpr/ |
+| ITAM (além de HAM e SAM) | https://ilazyfeel.github.io/radar-servicenow/itam/ |
 
 Todo o conteúdo vem de fontes públicas: documentação oficial da ServiceNow, newsroom, ServiceNow Community e documentação dos fabricantes. Cada item traz o link da fonte.
 

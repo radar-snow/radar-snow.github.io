@@ -32,7 +32,22 @@ const MODULES = [
     mods: [['secops', 'HRSD', 'HR Service Delivery']] },
   { slug: 'spm', sched: 'toda quinta, por volta das 8h', title: 'Radar SPM', short: 'SPM', label: 'Strategic Portfolio Management', lede: LEDE_BASE,
     desc: 'Portfólio, demandas, projetos, recursos, metas e estratégia, Agile e Otto/MCP para SPM.',
-    mods: [['secops', 'SPM', 'Strategic Portfolio Management']] }
+    mods: [['secops', 'SPM', 'Strategic Portfolio Management']] },
+  { slug: 'itom', sched: 'toda quinta, por volta das 9h', title: 'Radar ITOM', short: 'ITOM', label: 'IT Operations Management', lede: LEDE_BASE,
+    desc: 'Discovery, Service Mapping, CMDB, Event Management/AIOps, Health Log Analytics e observabilidade.',
+    mods: [['secops', 'ITOM', 'IT Operations Management']] },
+  { slug: 'apm-ea', sched: 'toda quinta, por volta das 10h', title: 'Radar APM/EA', short: 'APM/EA', label: 'Application Portfolio Management e Enterprise Architecture', lede: LEDE_BASE,
+    desc: 'Aplicações de negócio, capacidades, racionalização, Enterprise Architecture Workspace e MCP para EA.',
+    mods: [['secops', 'APM/EA', 'Enterprise Architecture']] },
+  { slug: 'otto', sched: 'toda sexta, por volta das 8h', title: 'Radar Otto', short: 'Otto', label: 'ServiceNow Otto (IA da plataforma)', lede: LEDE_BASE,
+    desc: 'AI Agent Studio, AI Control Tower, AI Admin Hub/Center, AI specialists e modelos do Now LLM.',
+    mods: [['secops', 'Otto', 'ServiceNow Otto']] },
+  { slug: 'dpm-dpr', sched: 'toda sexta, por volta das 9h', title: 'Radar DPM/DPR', short: 'DPM/DPR', label: 'Digital Portfolio Management e Digital Product Release', lede: LEDE_BASE,
+    desc: 'Portfólio digital de produtos e serviços, releases, fases, políticas e governança de lançamento.',
+    mods: [['secops', 'DPM/DPR', 'Digital Portfolio e Product Release']] },
+  { slug: 'itam', sched: 'toda sexta, por volta das 10h', title: 'Radar ITAM', short: 'ITAM', label: 'IT Asset Management (além de HAM e SAM)', lede: LEDE_BASE,
+    desc: 'Cloud Cost Management, Enterprise Asset Management, Contract Management Pro e ativos de data center.',
+    mods: [['secops', 'ITAM', 'IT Asset Management']] }
 ];
 const DATA_FILES = ['editions.js', 'integrations.js', 'armis-veza.js'];
 
@@ -92,7 +107,7 @@ fs.writeFileSync(path.join(__dirname, 'secops-irm', 'artifact.html'), render(MOD
 // página inicial
 const css = tpl.match(/<style>[\s\S]*?<\/style>/g).find(x => x.includes('--bg:'));
 const fmt = d => { const p = d.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
-const ICONS = { 'secops-irm': 'ti-shield-lock', itsm: 'ti-headset', ham: 'ti-device-laptop', sam: 'ti-license', fsm: 'ti-truck', hrsd: 'ti-users', spm: 'ti-chart-dots' };
+const ICONS = { 'secops-irm': 'ti-shield-lock', itsm: 'ti-headset', ham: 'ti-device-laptop', sam: 'ti-license', fsm: 'ti-truck', hrsd: 'ti-users', spm: 'ti-chart-dots', itom: 'ti-server-2', 'apm-ea': 'ti-sitemap', otto: 'ti-sparkles', 'dpm-dpr': 'ti-rocket', itam: 'ti-box' };
 const strip = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/\s+/g, ' ').trim();
 const today = new Date().toISOString().slice(0, 10);
 const cut = (s, n) => s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n)).replace(/[,.;:]$/, '') + '…';
