@@ -56,6 +56,9 @@ code{font-family:var(--mono);font-size:.85em}
 .top p{margin:0;color:var(--muted);max-width:70ch}
 .homelink{color:inherit;text-decoration:none;border-bottom:1px dotted var(--muted)}
 .homelink:hover{color:var(--fg)}
+.sched{font-size:.9rem;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sched strong{color:var(--fg)}
+.schedi{color:var(--accent);font-weight:700}
 .toprow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
 .seg.theme button{font-size:.85rem;padding:5px 12px}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
@@ -238,6 +241,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 .rc i{font-size:26px;color:var(--accent)}
 .rn{font-family:var(--display);font-weight:700;font-size:1.15rem}
 .rm{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.rs{font-size:.75rem;color:var(--accent);font-variant-numeric:tabular-nums}
 .dot{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--bar)}
 .feat{display:flex;flex-direction:column;gap:6px;padding:22px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:inset 4px 0 0 var(--bar);text-decoration:none;color:var(--fg)}
 .feat:hover{border-color:var(--accent)}
@@ -289,15 +293,15 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     })();
     </script>
     <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
-    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Atualizado toda semana.</p>
+    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no card (horário de Brasília).</p>
   </header>
   <nav class="rail" aria-label="Módulos">
-<a class="rc" href="secops-irm/"><i class="ti ti-shield-lock" aria-hidden="true"></i><span class="rn">SecOps & IRM</span><span class="rm">7 itens · 08/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
-<a class="rc" href="itsm/"><i class="ti ti-headset" aria-hidden="true"></i><span class="rn">ITSM</span><span class="rm">5 itens · 13/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
-<a class="rc" href="ham/"><i class="ti ti-device-laptop" aria-hidden="true"></i><span class="rn">HAM</span><span class="rm">3 itens · 13/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
-<a class="rc" href="sam/"><i class="ti ti-license" aria-hidden="true"></i><span class="rn">SAM</span><span class="rm">4 itens · 13/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
-<a class="rc" href="fsm/"><i class="ti ti-truck" aria-hidden="true"></i><span class="rn">FSM</span><span class="rm">3 itens · 13/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
-<a class="rc" href="hrsd/"><i class="ti ti-users" aria-hidden="true"></i><span class="rn">HRSD</span><span class="rm">3 itens · 13/11/2026</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="secops-irm/"><i class="ti ti-shield-lock" aria-hidden="true"></i><span class="rn">SecOps & IRM</span><span class="rm">7 itens · 08/11/2026</span><span class="rs">&#8635; segunda · 8h</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="itsm/"><i class="ti ti-headset" aria-hidden="true"></i><span class="rn">ITSM</span><span class="rm">5 itens · 13/11/2026</span><span class="rs">&#8635; terça · 8h</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="ham/"><i class="ti ti-device-laptop" aria-hidden="true"></i><span class="rn">HAM</span><span class="rm">3 itens · 13/11/2026</span><span class="rs">&#8635; quarta · 8h</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="sam/"><i class="ti ti-license" aria-hidden="true"></i><span class="rn">SAM</span><span class="rm">4 itens · 13/11/2026</span><span class="rs">&#8635; quarta · 9h</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="fsm/"><i class="ti ti-truck" aria-hidden="true"></i><span class="rn">FSM</span><span class="rm">3 itens · 13/11/2026</span><span class="rs">&#8635; quarta · 10h</span><span class="dot" title="Edição nova nesta semana"></span></a>
+<a class="rc" href="hrsd/"><i class="ti ti-users" aria-hidden="true"></i><span class="rn">HRSD</span><span class="rm">3 itens · 13/11/2026</span><span class="rs">&#8635; terça · 9h</span><span class="dot" title="Edição nova nesta semana"></span></a>
   </nav>
   <a class="feat" href="itsm/"><span class="label fk">Destaque da semana · ITSM · ação</span><span class="ft">ITSM Enhanced Security Features passa a ser ativado no upgrade</span><span class="fl">O plugin com.snc.itsm.enhanced_security agora é ativado automaticamente no upgrade para Brazil. Antes, ele só vinha ativo em instâncias novas. Ele adiciona regras de ACL "deny unless authenticated" em várias tabelas de ITSM. O plugin Change…</span><span class="fgo">Abrir ITSM →</span></a>
   <section class="find" aria-label="Buscar nas novidades">

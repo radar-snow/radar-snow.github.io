@@ -52,6 +52,9 @@ code{font-family:var(--mono);font-size:.85em}
 .top p{margin:0;color:var(--muted);max-width:70ch}
 .homelink{color:inherit;text-decoration:none;border-bottom:1px dotted var(--muted)}
 .homelink:hover{color:var(--fg)}
+.sched{font-size:.9rem;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sched strong{color:var(--fg)}
+.schedi{color:var(--accent);font-weight:700}
 .toprow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
 .seg.theme button{font-size:.85rem;padding:5px 12px}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
@@ -252,6 +255,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     </script>
     <h1>Radar FSM</h1>
     <p>Novidades oficiais da ServiceNow, resumidas e com casos de uso. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.</p>
+    <p class="sched"><span class="schedi" aria-hidden="true">&#8635;</span> Atualização semanal: <strong>toda quarta, por volta das 10h</strong> (horário de Brasília). Se não houver novidade oficial na semana, não sai edição nova.</p>
     <nav class="tabs" role="tablist" aria-label="Seções">
       <button type="button" role="tab" id="tab-news" data-view="news" aria-selected="true">Novidades</button>
       <button type="button" role="tab" id="tab-int" data-view="int" aria-selected="false">Integrações<span class="count" id="intcount"></span></button>

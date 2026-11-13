@@ -11,23 +11,23 @@ const SITE = 'https://ilazyfeel.github.io/radar-servicenow/';
 const LEDE_BASE = 'Novidades oficiais da ServiceNow, resumidas e com casos de uso. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.';
 
 const MODULES = [
-  { slug: 'secops-irm', title: 'Radar SecOps & IRM', short: 'SecOps & IRM', label: 'Security Operations & Integrated Risk Management',
+  { slug: 'secops-irm', sched: 'toda segunda, por volta das 8h', title: 'Radar SecOps & IRM', short: 'SecOps & IRM', label: 'Security Operations & Integrated Risk Management',
     lede: 'Novidades oficiais da ServiceNow, resumidas e com casos de uso, um guia de instalação das integrações mais usadas e o acompanhamento de Armis & Veza. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.',
     desc: 'Vulnerability Response/USEM, SIR, Threat Intelligence, Policy & Compliance, Risk, TPRM e BCM. Inclui guia de integrações e Armis & Veza.',
     mods: [['secops', 'SecOps', 'Security Operations'], ['irm', 'IRM', 'Integrated Risk Management']] },
-  { slug: 'itsm', title: 'Radar ITSM', short: 'ITSM', label: 'IT Service Management', lede: LEDE_BASE,
+  { slug: 'itsm', sched: 'toda terça, por volta das 8h', title: 'Radar ITSM', short: 'ITSM', label: 'IT Service Management', lede: LEDE_BASE,
     desc: 'Incident, Problem, Change, Request, Service Catalog, Service Operations Workspace e Otto for ITSM.',
     mods: [['secops', 'ITSM', 'IT Service Management']] },
-  { slug: 'ham', title: 'Radar HAM', short: 'HAM', label: 'Hardware Asset Management', lede: LEDE_BASE,
+  { slug: 'ham', sched: 'toda quarta, por volta das 8h', title: 'Radar HAM', short: 'HAM', label: 'Hardware Asset Management', lede: LEDE_BASE,
     desc: 'Ciclo de vida de hardware, inventário, contratos e Otto for HAM.',
     mods: [['secops', 'HAM', 'Hardware Asset Management']] },
-  { slug: 'sam', title: 'Radar SAM', short: 'SAM', label: 'Software Asset Management', lede: LEDE_BASE,
+  { slug: 'sam', sched: 'toda quarta, por volta das 9h', title: 'Radar SAM', short: 'SAM', label: 'Software Asset Management', lede: LEDE_BASE,
     desc: 'Licenças, publishers (Microsoft, SAP, Oracle...), SaaS License Management e Otto for SAM.',
     mods: [['secops', 'SAM', 'Software Asset Management']] },
-  { slug: 'fsm', title: 'Radar FSM', short: 'FSM', label: 'Field Service Management', lede: LEDE_BASE,
+  { slug: 'fsm', sched: 'toda quarta, por volta das 10h', title: 'Radar FSM', short: 'FSM', label: 'Field Service Management', lede: LEDE_BASE,
     desc: 'Work orders, Dispatcher Workspace, Field Service Mobile, agendamento e Schedule Optimization.',
     mods: [['secops', 'FSM', 'Field Service Management']] },
-  { slug: 'hrsd', title: 'Radar HRSD', short: 'HRSD', label: 'HR Service Delivery', lede: LEDE_BASE,
+  { slug: 'hrsd', sched: 'toda terça, por volta das 9h', title: 'Radar HRSD', short: 'HRSD', label: 'HR Service Delivery', lede: LEDE_BASE,
     desc: 'Case and Knowledge Management, Employee Center, EmployeeWorks, Lifecycle Events e Otto for HRSD.',
     mods: [['secops', 'HRSD', 'HR Service Delivery']] }
 ];
@@ -61,7 +61,8 @@ function render(m, home, versioned) {
     .split('{{HOME}}').join(home)
     .split('{{SCRIPTS}}').join(scripts)
     .split('{{MODBTNS}}').join(modBtns(m))
-    .split('{{MODS}}').join(JSON.stringify(m.mods));
+    .split('{{MODS}}').join(JSON.stringify(m.mods))
+    .split('{{SCHED}}').join(m.sched);
 }
 
 // páginas dos módulos
@@ -114,7 +115,7 @@ const featured = news.filter(x => x.date === latestDate).sort((a, b) => b.alert 
 const rail = summaries.map(({ m, latest }) => {
   const isNew = latest && (Date.parse(today) - Date.parse(latest.date)) / 864e5 <= 7;
   return '<a class="rc" href="' + m.slug + '/"><i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i><span class="rn">' + m.short + '</span>' +
-    '<span class="rm">' + (latest ? latest.items.length + ' itens · ' + fmt(latest.date) : 'sem edições') + '</span>' + (isNew ? '<span class="dot" title="Edição nova nesta semana"></span>' : '') + '</a>';
+    '<span class="rm">' + (latest ? latest.items.length + ' itens · ' + fmt(latest.date) : 'sem edições') + '</span><span class="rs">&#8635; ' + m.sched.replace('toda ', '').replace(', por volta das ', ' · ') + '</span>' + (isNew ? '<span class="dot" title="Edição nova nesta semana"></span>' : '') + '</a>';
 }).join('\n');
 const featHtml = featured ? '<a class="feat" href="' + featured.url + '"><span class="label fk">Destaque da semana · ' + featured.short + (featured.alert ? ' · ação' : '') + '</span><span class="ft">' + featured.title + '</span><span class="fl">' + featured.lede + '</span><span class="fgo">Abrir ' + featured.short + ' →</span></a>' : '';
 const pills = '<button type="button" class="chip" data-hm="all" aria-pressed="true">Todos</button>' + summaries.map(({ m }) => '<button type="button" class="chip" data-hm="' + m.slug + '" aria-pressed="false">' + m.short + '</button>').join('');
@@ -139,6 +140,7 @@ ${css}
 .rc i{font-size:26px;color:var(--accent)}
 .rn{font-family:var(--display);font-weight:700;font-size:1.15rem}
 .rm{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.rs{font-size:.75rem;color:var(--accent);font-variant-numeric:tabular-nums}
 .dot{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--bar)}
 .feat{display:flex;flex-direction:column;gap:6px;padding:22px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:inset 4px 0 0 var(--bar);text-decoration:none;color:var(--fg)}
 .feat:hover{border-color:var(--accent)}
@@ -171,7 +173,7 @@ ${css}
       <span class="label">ServiceNow · novidades oficiais por módulo</span>
       ${themeBlock}
     <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
-    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Atualizado toda semana.</p>
+    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no card (horário de Brasília).</p>
   </header>
   <nav class="rail" aria-label="Módulos">
 ${rail}
