@@ -140,6 +140,16 @@ const tiles = summaries.map(({ m, latest }) => {
     '<span class="tw">' + when + '</span>' +
     '<span class="ts">' + next + '</span></a>';
 }).join('\n');
+// comunicados (faixa verde no topo): editados à mão em comunicados.js
+const comCtx = { window: {} };
+require('vm').runInNewContext(fs.readFileSync(path.join(__dirname, 'comunicados.js'), 'utf8'), comCtx);
+const coms = (comCtx.window.RADAR_COM || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 3);
+const comHtml = !coms.length ? '' :
+  '<section class="com" aria-labelledby="com-h">\n    <h2 id="com-h"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</h2>\n    <ul>' +
+  coms.map(c => '<li>' + (c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : '') +
+    '<span class="ct">' + (c.url ? '<a href="' + c.url + '">' + c.title + '</a>' : c.title) + '</span>' +
+    (c.text ? '<span class="cx">' + c.text + '</span>' : '') + '</li>').join('') +
+  '</ul>\n  </section>';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
 const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: ' + MODULES.map(m => m.short).join(', ') + '.') +
 `<title>Radar ServiceNow</title>
@@ -164,6 +174,19 @@ ${css}
 .tl{font-size:.88rem;color:var(--muted);margin-bottom:10px}
 .tw{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .ts{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.com{--com-bg:#eef6e7;background:var(--com-bg);border:1px solid var(--accent);border-left:6px solid var(--accent);border-radius:14px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+.com h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;color:var(--accent)}
+.com h2 i{font-size:22px}
+.com ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.com li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;align-items:baseline}
+.com li+li{border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding-top:10px}
+.cd{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 2}
+.ct{font-weight:700}
+.ct a{color:inherit}
+.cx{grid-column:2;color:var(--muted);font-size:.95rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .com{--com-bg:#12200a}}
+:root[data-theme="dark"] .com{--com-bg:#12200a}
+@media (max-width:520px){ .com li{grid-template-columns:1fr} .cd{grid-row:auto} .cx{grid-column:1} }
 @media (max-width:520px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile{padding:16px} .tl{display:none} }
 </style>
 <div class="shell">
@@ -174,6 +197,7 @@ ${css}
     <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
     <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no bloco (horário de Brasília).</p>
   </header>
+  ${comHtml}
   <nav class="tiles" aria-label="Módulos">
 ${tiles}
   </nav>

@@ -245,6 +245,19 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 .tl{font-size:.88rem;color:var(--muted);margin-bottom:10px}
 .tw{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .ts{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.com{--com-bg:#eef6e7;background:var(--com-bg);border:1px solid var(--accent);border-left:6px solid var(--accent);border-radius:14px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+.com h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;color:var(--accent)}
+.com h2 i{font-size:22px}
+.com ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.com li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;align-items:baseline}
+.com li+li{border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding-top:10px}
+.cd{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 2}
+.ct{font-weight:700}
+.ct a{color:inherit}
+.cx{grid-column:2;color:var(--muted);font-size:.95rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .com{--com-bg:#12200a}}
+:root[data-theme="dark"] .com{--com-bg:#12200a}
+@media (max-width:520px){ .com li{grid-template-columns:1fr} .cd{grid-row:auto} .cx{grid-column:1} }
 @media (max-width:520px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile{padding:16px} .tl{display:none} }
 </style>
 <div class="shell">
@@ -274,6 +287,10 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
     <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no bloco (horário de Brasília).</p>
   </header>
+  <section class="com" aria-labelledby="com-h">
+    <h2 id="com-h"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</h2>
+    <ul><li><span class="cd">13/11/2026</span><span class="ct">Radar agora com 12 módulos</span><span class="cx">Entraram ITOM, APM/EA, Otto, DPM/DPR e ITAM. Cada módulo é atualizado uma vez por semana, no dia indicado no bloco.</span></li></ul>
+  </section>
   <nav class="tiles" aria-label="Módulos">
 <a class="tile" href="secops-irm/"><i class="ti ti-shield-lock" aria-hidden="true"></i><span class="tn">SecOps & IRM</span><span class="tl">Security Operations & Integrated Risk Management</span><span class="tw">Atualizado em 08/11/2026</span><span class="ts">&#8635; segunda · 8h</span></a>
 <a class="tile" href="itsm/"><i class="ti ti-headset" aria-hidden="true"></i><span class="tn">ITSM</span><span class="tl">IT Service Management</span><span class="tw">Atualizado em 13/11/2026</span><span class="ts">&#8635; terça · 8h</span></a>
