@@ -90,6 +90,7 @@ aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(s
 .t-secops{background:var(--secops-soft);color:var(--secops)}
 .t-irm{background:var(--irm-soft);color:var(--irm)}
 .t-warn{background:var(--warn-soft);color:var(--warn)}
+.isec .muted{color:var(--muted);margin:0}
 .topnotice{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .inotice{border:1px solid var(--warn);border-left:6px solid var(--warn);background:var(--surface);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px}
 .inotice h3{font-size:1.1rem}
@@ -276,7 +277,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     <main>
       <div class="filters" role="region" aria-label="Filtros de integrações">
         <div class="frow">
-          <input id="iq" class="search" type="search" placeholder="Buscar (ex.: 403, MID Server, Client Secret)" aria-label="Buscar nas integrações">
+          <input id="iq" class="search" type="search" placeholder="Buscar (ex.: 403, OAuth, Client Secret)" aria-label="Buscar nas integrações">
         </div>
         <div class="frow" id="iareas" aria-label="Áreas"></div>
         <div class="status" id="istatus"></div>
@@ -332,6 +333,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
 </div>
 
 <script src="editions.js?v=e8209442"></script>
+<script src="integrations.js?v=593ab408"></script>
 <script>
 (function(){
   var D = window.RADAR || {editions:[],events:[]};
@@ -478,13 +480,13 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     var procs=it.setup.map(function(p){return '<div class="proc"><h5>'+p.title+'</h5>'+(p.path?'<div class="path">'+p.path+'</div>':'')+ul(p.steps,'ol')+'</div>'}).join("");
     var issues=sortIssues(it.issues).map(issueHtml).join("");
     var docs=it.docs.map(function(d){return '<li><a href="'+d.url+'" target="_blank" rel="noopener">'+d.title+'</a></li>'}).join("");
-    return '<details class="int" id="int-'+it.id+'"'+(ist.open===it.id?' open':'')+'><summary><div class="ihead"><h3>'+it.name+'</h3><span class="tag t-'+(it.module||'secops')+'">'+(it.module==='irm'?'IRM':'SecOps')+'</span><span class="tag t-'+(it.module||'secops')+'">'+it.area.replace(/^IRM · /,'')+'</span><span class="open"></span></div><p>'+it.what+'</p></summary>'+
+    return '<details class="int" id="int-'+it.id+'"'+(ist.open===it.id?' open':'')+'><summary><div class="ihead"><h3>'+it.name+'</h3><span class="tag t-'+(it.module||'secops')+'">'+(it.module==='irm'?'IRM':(I.tag||'SecOps'))+'</span><span class="tag t-'+(it.module||'secops')+'">'+it.area.replace(/^IRM · /,'')+'</span><span class="open"></span></div><p>'+it.what+'</p></summary>'+
       '<div class="ibody"><div class="appline">App: <strong>'+it.app+'</strong> · feito por: '+it.builtBy+'</div>'+
       '<div class="isec"><h4>Compatibilidade</h4>'+ul(it.compat)+'</div>'+
       '<div class="cols"><div class="isec"><h4>Do lado do fornecedor</h4>'+ul(it.vendorSide)+'</div><div class="isec"><h4>Na ServiceNow (roles)</h4>'+ul(it.snSide)+'</div></div>'+
       '<div class="isec"><h4>Instalação e configuração</h4>'+procs+'</div>'+
       '<div class="isec"><h4>Como saber se funcionou</h4>'+ul(it.validate)+'</div>'+
-      '<div class="isec"><h4>Erros comuns e soluções</h4>'+issues+'</div>'+
+      '<div class="isec"><h4>Erros comuns e soluções</h4>'+(issues||'<p class="muted">Nenhum erro conhecido registrado ainda. A tarefa semanal acompanha a Community e as KBs.</p>')+'</div>'+
       '<div class="isec"><h4>Documentação</h4><ul>'+docs+'</ul></div></div></details>';
   }
   function intMatch(it){
