@@ -120,14 +120,13 @@ const tiles = summaries.map(({ m, latest }) => {
   const focus = m.slug === focusMod;
   const when = latest ? 'Atualizado em ' + fmt(latest.date) : 'Sem edições ainda';
   const next = '&#8635; ' + m.sched.replace('toda ', '').replace(', por volta das ', ' · ');
-  return '<a class="tile' + (focus ? ' focus' : '') + '" href="' + m.slug + '/"' + (focus ? ' aria-label="' + m.short + ', módulo em foco esta semana"' : '') + '>' +
+  return '<a class="tile' + (focus ? ' focus' : '') + '" href="' + m.slug + '/"' + '' + '>' +
     '<i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i>' +
     '<span class="tn">' + m.short + '</span>' +
     '<span class="tl">' + m.label + '</span>' +
-    '<span class="tw">' + (focus ? '<strong>Em foco</strong> · ' : '') + when + '</span>' +
+    '<span class="tw">' + when + '</span>' +
     '<span class="ts">' + next + '</span></a>';
 }).join('\n');
-const featLine = featured ? '<a class="featline" href="' + featured.url + '"><span class="label">Destaque da semana · ' + featured.short + '</span><span class="fltxt">' + featured.title + '</span><span class="flgo" aria-hidden="true">→</span></a>' : '';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
 const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: ' + MODULES.map(m => m.short).join(', ') + '.') +
 `<title>Radar ServiceNow</title>
@@ -156,11 +155,6 @@ ${css}
 .tile.focus i,.tile.focus .tl,.tile.focus .tw,.tile.focus .ts{color:#000}
 .tile.focus .tw strong{font-weight:700}
 .tile.focus:hover{border-color:#000}
-.featline{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
-.featline .label{color:var(--accent)}
-.fltxt{flex:1;min-width:0;font-weight:600}
-.flgo{color:var(--accent);font-weight:700}
-.featline:hover .fltxt{text-decoration:underline;text-underline-offset:3px}
 @media (max-width:520px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile{padding:16px} .tl{display:none} }
 </style>
 <div class="shell">
@@ -174,7 +168,6 @@ ${css}
   <nav class="tiles" aria-label="Módulos">
 ${tiles}
   </nav>
-  ${featLine}
   <p class="notes">Fontes: documentação oficial da ServiceNow (release notes), newsroom e posts da ServiceNow na Community. Não é um produto oficial da ServiceNow. As sugestões de aplicação são interpretação e vêm marcadas como tal.</p>
 </div>
 ` + foot;
