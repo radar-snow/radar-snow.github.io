@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const SITE = 'https://ilazyfeel.github.io/radar-servicenow/';
+const SITE = 'https://radar-snow.github.io/';
 const LEDE_BASE = 'Novidades oficiais da ServiceNow, resumidas e com casos de uso. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.';
 
 const MODULES = [

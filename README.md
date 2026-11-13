@@ -2,22 +2,22 @@
 
 Um radar para cada módulo da ServiceNow: novidades oficiais resumidas, com casos de uso, tutoriais ("Como aplicar") e links para as fontes.
 
-**Site:** https://ilazyfeel.github.io/radar-servicenow/
+**Site:** https://radar-snow.github.io/
 
 | Módulo | Link |
 |---|---|
-| SecOps & IRM (com guia de integrações e Armis & Veza) | https://ilazyfeel.github.io/radar-servicenow/secops-irm/ |
-| ITSM | https://ilazyfeel.github.io/radar-servicenow/itsm/ |
-| HAM | https://ilazyfeel.github.io/radar-servicenow/ham/ |
-| SAM | https://ilazyfeel.github.io/radar-servicenow/sam/ |
-| FSM | https://ilazyfeel.github.io/radar-servicenow/fsm/ |
-| HRSD | https://ilazyfeel.github.io/radar-servicenow/hrsd/ |
-| SPM | https://ilazyfeel.github.io/radar-servicenow/spm/ |
-| ITOM | https://ilazyfeel.github.io/radar-servicenow/itom/ |
-| APM/EA | https://ilazyfeel.github.io/radar-servicenow/apm-ea/ |
-| Otto | https://ilazyfeel.github.io/radar-servicenow/otto/ |
-| DPM/DPR | https://ilazyfeel.github.io/radar-servicenow/dpm-dpr/ |
-| ITAM (além de HAM e SAM) | https://ilazyfeel.github.io/radar-servicenow/itam/ |
+| SecOps & IRM (com guia de integrações e Armis & Veza) | https://radar-snow.github.io/secops-irm/ |
+| ITSM | https://radar-snow.github.io/itsm/ |
+| HAM | https://radar-snow.github.io/ham/ |
+| SAM | https://radar-snow.github.io/sam/ |
+| FSM | https://radar-snow.github.io/fsm/ |
+| HRSD | https://radar-snow.github.io/hrsd/ |
+| SPM | https://radar-snow.github.io/spm/ |
+| ITOM | https://radar-snow.github.io/itom/ |
+| APM/EA | https://radar-snow.github.io/apm-ea/ |
+| Otto | https://radar-snow.github.io/otto/ |
+| DPM/DPR | https://radar-snow.github.io/dpm-dpr/ |
+| ITAM (além de HAM e SAM) | https://radar-snow.github.io/itam/ |
 
 Todo o conteúdo vem de fontes públicas: documentação oficial da ServiceNow, newsroom, ServiceNow Community e documentação dos fabricantes. Cada item traz o link da fonte.
 
