@@ -1,7 +1,7 @@
-/* Comunicados da página inicial (faixa verde acima dos módulos).
+/* Comunicados: faixa verde na página inicial (3 mais recentes) e página própria em comunicados/ (todos).
    Para publicar um aviso: adicione um objeto em window.RADAR_COM e rode `node build.js`.
-   Campos: date "AAAA-MM-DD", title, text (pode ter HTML simples, como <strong>), url (opcional).
-   Aparecem os 3 mais recentes. Lista vazia = a faixa some.
+   Campos: date "AAAA-MM-DD", title, text (resumo de uma linha; pode ter HTML simples, como <strong>),
+   body (opcional: texto longo em HTML, só aparece na página), url (opcional: link "Saiba mais").
    As tarefas semanais não mexem neste arquivo. */
 window.RADAR_COM = [
   {

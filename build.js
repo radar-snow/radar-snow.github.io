@@ -143,14 +143,64 @@ const tiles = summaries.map(({ m, latest }) => {
 // comunicados (faixa verde no topo): editados à mão em comunicados.js
 const comCtx = { window: {} };
 require('vm').runInNewContext(fs.readFileSync(path.join(__dirname, 'comunicados.js'), 'utf8'), comCtx);
-const coms = (comCtx.window.RADAR_COM || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 3);
-const comHtml = !coms.length ? '' :
-  '<section class="com" aria-labelledby="com-h">\n    <h2 id="com-h"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</h2>\n    <ul>' +
-  coms.map(c => '<li>' + (c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : '') +
-    '<span class="ct">' + (c.url ? '<a href="' + c.url + '">' + c.title + '</a>' : c.title) + '</span>' +
-    (c.text ? '<span class="cx">' + c.text + '</span>' : '') + '</li>').join('') +
-  '</ul>\n  </section>';
+const allComs = (comCtx.window.RADAR_COM || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+// âncora de cada aviso na página: c-AAAA-MM-DD (com -2, -3... se houver mais de um no mesmo dia)
+const comSeen = {};
+allComs.slice().reverse().forEach(c => { const k = c.date || 'sem-data'; comSeen[k] = (comSeen[k] || 0) + 1; c.id = 'c-' + k + (comSeen[k] > 1 ? '-' + comSeen[k] : ''); });
+const comHtml = '<section class="com" aria-labelledby="com-h">\n    <h2 id="com-h"><a href="comunicados/"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</a></h2>\n    ' +
+  (allComs.length
+    ? '<ul>' + allComs.slice(0, 3).map(c => '<li>' + (c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : '') +
+        '<span class="ct"><a href="comunicados/#' + c.id + '">' + c.title + '</a></span>' +
+        (c.text ? '<span class="cx">' + c.text + '</span>' : '') + '</li>').join('') + '</ul>'
+    : '<p class="cx">Nenhum comunicado no momento.</p>') +
+  '\n    <a class="cmore" href="comunicados/">Ver todos os comunicados &#8594;</a>\n  </section>';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
+const FONT_LINKS = `<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">`;
+
+// página de comunicados
+fs.mkdirSync(path.join(__dirname, 'comunicados'), { recursive: true });
+const comPage = head('Radar ServiceNow · Comunicados', 'Comunicados do time sobre o Radar ServiceNow.') +
+`<title>Comunicados · Radar ServiceNow</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+${FONT_LINKS}
+${css}
+<style>
+.shell{max-width:860px}
+.clist{display:flex;flex-direction:column;gap:16px}
+.citem{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:14px;padding:20px 24px;display:flex;flex-direction:column;gap:6px;scroll-margin-top:16px}
+.citem:target{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+.citem .cd{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.citem h2{font-size:1.3rem}
+.citem .cx{margin:0;color:var(--fg)}
+.citem .cb{color:var(--muted)}
+.citem .cb p{margin:.4em 0}
+.citem .cl{font-weight:600;color:var(--accent)}
+.cempty{color:var(--muted)}
+.top h1 i{color:var(--accent);margin-right:10px}
+</style>
+<div class="shell">
+  <header class="top">
+    <div class="toprow">
+      <span class="label"><a class="homelink" href="../">← Radar ServiceNow</a> · Comunicados</span>
+      ${themeBlock}
+    <h1><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</h1>
+    <p>Avisos do time sobre o Radar e sobre os módulos, do mais recente para o mais antigo. Não são publicações da ServiceNow.</p>
+  </header>
+  <main class="clist">
+${allComs.length ? allComs.map(c => `    <article class="citem" id="${c.id}">
+      ${c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : ''}
+      <h2>${c.title}</h2>
+      ${c.text ? '<p class="cx">' + c.text + '</p>' : ''}
+      ${c.body ? '<div class="cb">' + c.body + '</div>' : ''}
+      ${c.url ? '<a class="cl" href="' + c.url + '">Saiba mais &#8594;</a>' : ''}
+    </article>`).join('\n') : '    <p class="cempty">Nenhum comunicado no momento.</p>'}
+  </main>
+  <p class="notes">Comunicados são escritos pelo time que mantém o Radar. As novidades da ServiceNow ficam nas páginas de cada módulo.</p>
+</div>
+` + foot;
+fs.writeFileSync(path.join(__dirname, 'comunicados', 'index.html'), comPage);
 const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: ' + MODULES.map(m => m.short).join(', ') + '.') +
 `<title>Radar ServiceNow</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -175,8 +225,12 @@ ${css}
 .tw{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .ts{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .com{--com-bg:#eef6e7;background:var(--com-bg);border:1px solid var(--accent);border-left:6px solid var(--accent);border-radius:14px;padding:18px 22px;display:flex;flex-direction:column;gap:10px}
-.com h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;color:var(--accent)}
+.com h2{font-size:1.15rem}
+.com h2 a{display:inline-flex;align-items:center;gap:8px;color:var(--accent);text-decoration:none}
+.com h2 a:hover{text-decoration:underline}
 .com h2 i{font-size:22px}
+.cmore{align-self:flex-start;font-size:.9rem;font-weight:600;color:var(--accent);text-decoration:none}
+.cmore:hover{text-decoration:underline}
 .com ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .com li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;align-items:baseline}
 .com li+li{border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding-top:10px}
