@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="IT Service Management: novidades oficiais da ServiceNow com casos de uso.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}</style>
+</head>
+<body>
+<title>Radar ITSM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: portal de duas colunas (conteúdo + coluna lateral com arquivo e agenda); vira uma coluna no celular. Filtros fixos no topo do conteúdo. */
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --fg:#17212b; --muted:#566370; --line:#dbe2e7; --hover:#eef2f5;
+  --secops:#3b4fd8; --secops-soft:#e9ecfd;
+  --irm:#0f7a5c; --irm-soft:#e3f3ed;
+  --warn:#a35a00; --warn-soft:#fdf0dc;
+  --sug:#6a4fb0; --sug-soft:#f0ebfa;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --surface:#18212a; --fg:#e4eaef; --muted:#9aa8b5; --line:#2a3743; --hover:#1f2a35;
+  --secops:#8d9cff; --secops-soft:#1f2650; --irm:#5fd0a8; --irm-soft:#12352b;
+  --warn:#f0b35c; --warn-soft:#3a2a12; --sug:#b9a2f0; --sug-soft:#2a2240; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --surface:#18212a; --fg:#e4eaef; --muted:#9aa8b5; --line:#2a3743; --hover:#1f2a35;
+  --secops:#8d9cff; --secops-soft:#1f2650; --irm:#5fd0a8; --irm-soft:#12352b;
+  --warn:#f0b35c; --warn-soft:#3a2a12; --sug:#b9a2f0; --sug-soft:#2a2240; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:inherit;text-decoration-color:var(--muted);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--secops);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.9rem,4.5vw,2.6rem)}
+h2{font-size:1.45rem}
+h3{font-size:1.12rem}
+code{font-family:var(--mono);font-size:.85em}
+.label{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.shell{max-width:1180px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+.top{display:flex;flex-direction:column;gap:8px}
+.top p{margin:0;color:var(--muted);max-width:70ch}
+.homelink{color:inherit;text-decoration:none;border-bottom:1px dotted var(--muted)}
+.homelink:hover{color:var(--fg)}
+.toprow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.seg.theme button{font-size:.85rem;padding:5px 12px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
+main{display:flex;flex-direction:column;gap:22px;min-width:0}
+aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+
+/* filtros */
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:.95rem;font-weight:600;padding:6px 14px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button[data-m="secops"][aria-pressed="true"]{background:var(--secops);color:var(--surface)}
+.seg button[data-m="irm"][aria-pressed="true"]{background:var(--irm);color:var(--surface)}
+.chip{font:inherit;font-size:.85rem;padding:3px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.chip:hover{background:var(--hover)}
+.chip[aria-pressed="true"]{border-color:currentColor}
+.chip.secops[aria-pressed="true"]{background:var(--secops-soft);color:var(--secops)}
+.chip.irm[aria-pressed="true"]{background:var(--irm-soft);color:var(--irm)}
+.search{flex:1 1 220px;min-width:0;font:inherit;font-size:.95rem;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.status{font-size:.9rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.linkbtn{font:inherit;font-size:.9rem;background:none;border:0;padding:0;color:var(--secops);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* cabeçalho da edição */
+.ed-head{display:flex;flex-direction:column;gap:4px}
+.ed-head .meta{display:flex;flex-wrap:wrap;gap:4px 16px;color:var(--muted);font-size:.95rem}
+.badge{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:var(--fg);color:var(--bg);vertical-align:3px;margin-left:6px}
+
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.summary ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px}
+.tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap;vertical-align:2px}
+.t-secops{background:var(--secops-soft);color:var(--secops)}
+.t-irm{background:var(--irm-soft);color:var(--irm)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-geral{background:var(--hover);color:var(--muted)}
+
+.group{display:flex;flex-direction:column;gap:14px;margin-top:22px}
+.ghead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:8px;border-bottom:3px solid var(--c)}
+.ghead h2{color:var(--c)}
+.secops{--c:var(--secops)} .irm{--c:var(--irm)}
+
+article{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+article.alert{border-color:var(--warn);box-shadow:inset 4px 0 0 var(--warn)}
+.ahead{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ahead .label{margin-right:4px}
+.row{display:grid;grid-template-columns:140px minmax(0,1fr);gap:4px 16px;margin:0}
+.row dt{font-weight:700;font-size:.9rem;color:var(--muted);padding-top:2px}
+.row dd{margin:0;min-width:0}
+.row ul{margin:0;padding-left:1.1em}
+.sug{background:var(--sug-soft);border-radius:8px;padding:12px 14px}
+.sug .label{color:var(--sug);display:block;margin-bottom:4px}
+.src{font-size:.9rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.src a{word-break:break-word}
+.from{font-size:.85rem;color:var(--muted)}
+/* como aplicar */
+details.howto{border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+details.howto > summary{cursor:pointer;list-style:none;padding:10px 14px;font-weight:700;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+details.howto > summary::-webkit-details-marker{display:none}
+details.howto > summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details.howto[open] > summary::before{transform:rotate(90deg)}
+details.howto > summary .rel{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.hbody{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.hbody h4{margin:0;font-size:.82rem;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.hbody ul,.hbody ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.path{font-family:var(--mono);font-size:.85rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px;overflow-x:auto;white-space:nowrap}
+.hnote{font-size:.88rem;color:var(--muted);margin:0}
+.docbtn{align-self:flex-start;font-weight:600;font-size:.92rem;text-decoration:none;border:1px solid var(--fg);border-radius:6px;padding:5px 12px}
+.docbtn:hover{background:var(--hover)}
+.basis{font-size:.82rem;color:var(--muted)}
+.featured{background:var(--surface);border:2px solid var(--fg);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.featured details.howto{border:0;background:transparent}
+.featured details.howto > summary{padding:0 0 6px;font-size:1.12rem;font-family:var(--display)}
+.featured .hbody{padding:0}
+/* abas */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:6px}
+.tabs button{font:inherit;font-weight:700;font-size:1rem;background:none;border:0;border-bottom:3px solid transparent;padding:8px 14px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+.tabs .count{font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--muted);margin-left:4px}
+/* integrações */
+details.int{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.int > summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;flex-direction:column;gap:6px}
+details.int > summary::-webkit-details-marker{display:none}
+details.int > summary .ihead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+details.int > summary h3{font-size:1.25rem}
+details.int > summary .open{margin-left:auto;font-size:.85rem;color:var(--muted)}
+details.int[open] > summary .open::after{content:"recolher ▴"}
+details.int:not([open]) > summary .open::after{content:"abrir ▾"}
+details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
+.ibody{padding:0 22px 22px;display:flex;flex-direction:column;gap:18px}
+.isec{display:flex;flex-direction:column;gap:8px}
+.isec h4{margin:0;font-family:var(--mono);font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.isec ul,.isec ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:5px}
+.appline{font-size:.92rem;color:var(--muted)}
+.appline strong{color:var(--fg)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.proc{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.proc h5{margin:0;font-size:1rem;font-family:var(--body)}
+.issue{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.issue .ih{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.issue .ip{font-weight:700}
+.issue p{margin:0}
+.issue .is{font-size:.85rem;color:var(--muted)}
+.issue .when{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.st{font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.st-open{color:var(--warn)}
+.st-lim{color:var(--sug)}
+.st-work{color:var(--secops)}
+.st-kb{color:var(--muted)}
+.st-ok{color:var(--irm)}
+.feed{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
+.fhead{display:flex;flex-direction:column;gap:4px}
+.fhead p{margin:0;color:var(--muted);font-size:.93rem}
+.feed ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.feed li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.fd{font-family:var(--mono);font-size:.8rem;color:var(--muted);padding-top:2px;font-variant-numeric:tabular-nums}
+.fi{font-weight:700}
+.fp{font-size:.95rem}
+.lvl{font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.l-oficial{background:var(--irm-soft);color:var(--irm)}
+.l-fabricante{background:var(--irm-soft);color:var(--irm);outline:1px dashed var(--irm);outline-offset:-1px}
+.l-servicenow{background:var(--secops-soft);color:var(--secops)}
+.l-comunidade{background:var(--warn-soft);color:var(--warn)}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:.88rem}
+.legend li{display:flex;flex-direction:column;gap:2px}
+.idx{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.idx a{display:flex;justify-content:space-between;gap:8px;text-decoration:none;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:.93rem}
+.idx a:hover{background:var(--hover)}
+.idx .a{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+@media (max-width:700px){ .cols{grid-template-columns:minmax(0,1fr)} }
+/* Armis & Veza */
+.grid.avonly{grid-template-columns:minmax(0,1fr)}
+.avlede{font-size:1.05rem;color:var(--muted);max-width:75ch;margin:0}
+.avgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.avco h3{font-size:1.4rem}
+.avco p{margin:0}
+.avtable td{vertical-align:top}
+.avtable td:first-child{white-space:normal;min-width:110px}
+.avwhat{color:var(--muted);font-size:.92rem}
+.avl{font-size:.88rem;color:var(--muted);max-width:240px}
+.avlink{font-size:.88rem;font-weight:600}
+.feed li.fut{opacity:.85}
+@media (max-width:760px){ .avgrid{grid-template-columns:minmax(0,1fr)} }
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px;text-align:center;color:var(--muted)}
+.notes{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;margin:0}
+
+/* coluna lateral */
+.panel{display:flex;flex-direction:column;gap:10px}
+.panel h2{font-size:1.1rem}
+.edlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.edlist button{width:100%;text-align:left;font:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--fg);display:flex;flex-direction:column;gap:2px}
+.edlist button:hover{background:var(--hover)}
+.edlist button[aria-current="true"]{border-color:var(--fg);box-shadow:inset 3px 0 0 var(--fg)}
+.edlist .t{font-weight:700}
+.edlist .s{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.evlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.evlist li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.evlist .d{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:3px}
+.evlist .e{font-size:.93rem;line-height:1.4}
+.evlist .x{font-size:.82rem;color:var(--muted)}
+.method{font-size:.85rem;color:var(--muted);margin:0}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  aside{position:static}
+}
+@media (max-width:560px){
+  .row{grid-template-columns:minmax(0,1fr)}
+  .row dt{padding-top:6px}
+  article,.summary{padding:16px}
+}
+@media (prefers-reduced-motion:no-preference){ article{transition:border-color .15s} }
+</style>
+
+<div class="shell">
+  <header class="top">
+    <div class="toprow">
+      <span class="label"><a class="homelink" href="../">← Radar ServiceNow</a> · IT Service Management</span>
+      <div class="seg theme" role="group" aria-label="Tema da página">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="Tema claro">☀ Claro</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="Tema escuro">☾ Escuro</button>
+        <button type="button" data-theme-set="system" aria-pressed="true" title="Seguir o sistema">Sistema</button>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var K="radar-theme", root=document.documentElement;
+      function mark(t){ document.querySelectorAll("[data-theme-set]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-theme-set")===t)); }); }
+      function apply(t){ if(t==="light"||t==="dark") root.setAttribute("data-theme",t); else root.removeAttribute("data-theme"); mark(t); }
+      var saved=null; try{ saved=localStorage.getItem(K); }catch(e){}
+      if(saved==="light"||saved==="dark") apply(saved); else mark("system");
+      document.addEventListener("click", function(e){
+        var b=e.target.closest("[data-theme-set]"); if(!b) return;
+        var v=b.getAttribute("data-theme-set"); apply(v);
+        try{ if(v==="system") localStorage.removeItem(K); else localStorage.setItem(K,v); }catch(err){}
+      });
+    })();
+    </script>
+    <h1>Radar ITSM</h1>
+    <p>Novidades oficiais da ServiceNow, resumidas e com casos de uso. Cada item traz o link da fonte. Os blocos roxos marcados como <strong>sugestão</strong> são interpretação, não afirmação da ServiceNow.</p>
+    <nav class="tabs" role="tablist" aria-label="Seções">
+      <button type="button" role="tab" id="tab-news" data-view="news" aria-selected="true">Novidades</button>
+      <button type="button" role="tab" id="tab-int" data-view="int" aria-selected="false">Integrações<span class="count" id="intcount"></span></button>
+      <button type="button" role="tab" id="tab-av" data-view="av" aria-selected="false">Armis &amp; Veza</button>
+    </nav>
+  </header>
+
+  <div class="grid" id="intGrid" hidden>
+    <main>
+      <div class="filters" role="region" aria-label="Filtros de integrações">
+        <div class="frow">
+          <input id="iq" class="search" type="search" placeholder="Buscar (ex.: 403, MID Server, Client Secret)" aria-label="Buscar nas integrações">
+        </div>
+        <div class="frow" id="iareas" aria-label="Áreas"></div>
+        <div class="status" id="istatus"></div>
+      </div>
+      <div id="iview" style="display:flex;flex-direction:column;gap:14px"></div>
+    </main>
+    <aside>
+      <section class="panel" aria-labelledby="idxh">
+        <h2 id="idxh">Integrações</h2>
+        <ul class="idx" id="iidx"></ul>
+      </section>
+      <section class="panel" aria-labelledby="lgh">
+        <h2 id="lgh">Nível de confiança</h2>
+        <ul class="legend">
+          <li><span><span class="lvl l-oficial">oficial</span></span><span>Documentação ou KB da ServiceNow.</span></li>
+          <li><span><span class="lvl l-fabricante">fabricante</span></span><span>Documentação oficial do fornecedor da ferramenta.</span></li>
+          <li><span><span class="lvl l-servicenow">servicenow</span></span><span>Resposta de funcionário da ServiceNow na Community.</span></li>
+          <li><span><span class="lvl l-comunidade">comunidade</span></span><span>Solução relatada por outros usuários. Funcionou para alguém: teste antes.</span></li>
+        </ul>
+      </section>
+      <p class="method" id="irev"></p>
+    </aside>
+  </div>
+
+  <div class="grid avonly" id="avGrid" hidden>
+    <main id="avview" style="display:flex;flex-direction:column;gap:22px"></main>
+  </div>
+
+  <div class="grid" id="newsGrid">
+    <main>
+      <div class="filters" role="region" aria-label="Filtros">
+        <div class="frow">
+          <input id="q" class="search" type="search" placeholder="Buscar (ex.: XSIAM, USEM, TPRM)" aria-label="Buscar nas novidades">
+        </div>
+        <div class="frow" id="subs" aria-label="Submódulos"></div>
+        <div class="status" id="status"></div>
+      </div>
+      <div id="view"></div>
+    </main>
+
+    <aside>
+      <section class="panel" aria-labelledby="arq">
+        <h2 id="arq">Edições</h2>
+        <ul class="edlist" id="edlist"></ul>
+      </section>
+      <section class="panel" aria-labelledby="ag">
+        <h2 id="ag">Agenda oficial</h2>
+        <ul class="evlist" id="evlist"></ul>
+      </section>
+      <p class="method"><strong>Fontes usadas:</strong> servicenow.com/docs (release notes), newsroom.servicenow.com e posts da ServiceNow na Community. Sites de terceiros servem só para localizar páginas oficiais.</p>
+    </aside>
+  </div>
+</div>
+
+<script src="editions.js?v=d6890dcb"></script>
+<script>
+(function(){
+  var D = window.RADAR || {editions:[],events:[]};
+  var eds = D.editions.slice().sort(function(a,b){return b.id-a.id});
+  var latest = eds[0];
+  var state = {ed: latest ? latest.id : "all", mod:"all", subs:[], q:""};
+  var MODS = [["secops","ITSM","IT Service Management"]]; var MOD = {}; MODS.forEach(function(m){ MOD[m[0]]=m[2]; });
+  var $ = function(id){return document.getElementById(id)};
+
+  function fmt(d){ if(!d) return ""; var p=d.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
+  function strip(h){ var t=document.createElement("div"); t.innerHTML=h; return (t.textContent||"").toLowerCase(); }
+  function allItems(){
+    var out=[]; eds.forEach(function(e){ e.items.forEach(function(it){ out.push({it:it, ed:e}); }); });
+    return out;
+  }
+  function subsFor(mod){
+    var seen={}, list=[];
+    allItems().forEach(function(x){
+      if(mod!=="all" && x.it.module!==mod) return;
+      x.it.subs.forEach(function(s){ var k=x.it.module+"|"+s; if(!seen[k]){seen[k]=1; list.push({s:s,m:x.it.module});} });
+    });
+    return list;
+  }
+  function matches(x){
+    var it=x.it;
+    if(state.mod!=="all" && it.module!==state.mod) return false;
+    if(state.subs.length && !it.subs.some(function(s){return state.subs.indexOf(s)>-1})) return false;
+    if(state.q){
+      var hay=(it.title+" "+it.kicker+" "+it.subs.join(" ")+" "+strip(JSON.stringify(it.howto||[]))+" "+strip(it.rows.map(function(r){return r[0]+" "+r[1]}).join(" "))+" "+strip(it.suggestion||"")+" "+it.sources.map(function(s){return s.title}).join(" ")).toLowerCase();
+      if(hay.indexOf(state.q)<0) return false;
+    }
+    return true;
+  }
+  function filtering(){ return state.mod!=="all" || state.subs.length || state.q; }
+
+  function howtoHtml(h, open){
+    var li=function(a){return a.map(function(s){return '<li>'+s+'</li>'}).join("")};
+    return '<details class="howto"'+(open?' open':'')+'><summary>Como aplicar: '+h.title+(h.release?' <span class="rel">vale para: '+h.release+'</span>':'')+'</summary><div class="hbody">'+
+      (h.basis?'<span class="basis">'+h.basis+'</span>':'')+
+      (h.prereqs&&h.prereqs.length?'<h4>Pré-requisitos</h4><ul>'+li(h.prereqs)+'</ul>':'')+
+      (h.path?'<h4>Caminho</h4><div class="path">'+h.path+'</div>':'')+
+      (h.steps&&h.steps.length?'<h4>Passos</h4><ol>'+li(h.steps)+'</ol>':'')+
+      (h.note?'<p class="hnote">'+h.note+'</p>':'')+
+      (h.docUrl?'<a class="docbtn" href="'+h.docUrl+'" target="_blank" rel="noopener">Ver na documentação oficial ↗</a>':'')+
+      '</div></details>';
+  }
+  function featuredOf(ed){
+    for(var i=0;i<ed.items.length;i++){ var hs=ed.items[i].howto||[]; for(var j=0;j<hs.length;j++){ if(hs[j].featured) return {it:ed.items[i], h:hs[j]}; } }
+    return null;
+  }
+  function card(x, showEd){
+    var it=x.it;
+    var tags=it.subs.map(function(s){return '<span class="tag t-'+it.module+'">'+s+'</span>'}).join("");
+    if(it.alert) tags='<span class="tag t-warn">ação</span>'+tags;
+    var rows=it.rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'}).join("");
+    var sug=it.suggestion?'<div class="sug"><span class="label">Sugestão de aplicação</span>'+it.suggestion+'</div>':"";
+    sug+=(it.howto||[]).map(function(h){return howtoHtml(h,false)}).join("");
+    var src=it.sources.map(function(s){return '<span><a href="'+s.url+'" target="_blank" rel="noopener">'+s.title+'</a>'+(s.note?' ('+s.note+')':'')+'</span>'}).join("");
+    var from=showEd?'<span class="from">Edição nº '+x.ed.id+' · '+fmt(x.ed.date)+'</span>':"";
+    return '<article class="'+(it.alert?'alert':'')+'"><div class="ahead"><span class="label">'+it.kicker+'</span>'+tags+'</div>'+
+      '<h3>'+it.title+'</h3>'+from+'<dl class="row">'+rows+'</dl>'+sug+
+      '<div class="src"><span class="label">Fonte'+(it.sources.length>1?'s':'')+'</span>'+src+'</div></article>';
+  }
+  function groups(list, showEd){
+    var html="";
+    MODS.map(function(m){return m[0];}).forEach(function(m){
+      var g=list.filter(function(x){return x.it.module===m});
+      if(!g.length) return;
+      html+='<section class="group '+m+'"><div class="ghead"><h2>'+MOD[m]+'</h2><span class="label">'+g.length+' '+(g.length>1?'itens':'item')+'</span></div>'+g.map(function(x){return card(x,showEd)}).join("")+'</section>';
+    });
+    return html;
+  }
+
+  function render(){
+    // botões de módulo
+    document.querySelectorAll(".seg button[data-m]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.m===state.mod)); });
+    // chips de submódulo
+    $("subs").innerHTML = '<span class="label" style="margin-right:4px">Submódulo</span>' + subsFor(state.mod).map(function(o){
+      var on=state.subs.indexOf(o.s)>-1;
+      return '<button type="button" class="chip '+o.m+'" data-sub="'+o.s+'" aria-pressed="'+on+'">'+o.s+'</button>';
+    }).join("");
+
+    var all=state.ed==="all";
+    var ed=all?null:eds.filter(function(e){return e.id===state.ed})[0];
+    var pool=all?allItems():ed.items.map(function(it){return {it:it,ed:ed}});
+    var list=pool.filter(matches);
+
+    // status
+    var st=list.length+" de "+pool.length+" itens";
+    if(filtering()) st+=' · <button type="button" class="linkbtn" id="clear">limpar filtros</button>';
+    if(!all && filtering() && eds.length>1) st+=' · <button type="button" class="linkbtn" id="everywhere">buscar em todas as edições</button>';
+    $("status").innerHTML=st;
+
+    var html="";
+    if(all){
+      html+='<div class="ed-head"><span class="label">Arquivo</span><h2>Todas as edições</h2><div class="meta"><span>'+eds.length+' '+(eds.length>1?'edições':'edição')+'</span><span>'+allItems().length+' itens no total</span></div></div>';
+    } else {
+      html+='<div class="ed-head"><span class="label">Edição nº '+ed.id+(ed===latest?'<span class="badge">atual</span>':'')+'</span><h2>Novidades até '+fmt(ed.date)+'</h2><div class="meta"><span>Coleta: '+fmt(ed.date)+'</span><span>Período: '+ed.period+'</span></div></div>';
+      if(!filtering() && ed.summary && ed.summary.length){
+        html+='<div class="summary"><span class="label">Resumo executivo · 1 minuto</span><ol>'+ed.summary.map(function(s){return '<li><span class="tag t-'+s.module+'">'+s.tag+'</span> '+s.html+'</li>'}).join("")+'</ol></div>';
+      }
+      var f=filtering()?null:featuredOf(ed);
+      if(f){
+        html+='<div class="featured"><span class="label">Tutorial da semana · '+f.it.subs.join(" · ")+'</span>'+howtoHtml(f.h,false)+'</div>';
+      }
+    }
+    html+= list.length ? groups(list, all) : '<div class="empty">Nenhum item com esses filtros. Tente outro submódulo ou limpe a busca.</div>';
+    if(!all && ed.notes && !filtering()) html+='<p class="notes"><strong>Limites desta edição.</strong> '+ed.notes+'</p>';
+    $("view").innerHTML=html;
+
+    // lista de edições
+    var items='<li><button type="button" data-ed="all" aria-current="'+all+'"><span class="t">Todas as edições</span><span class="s">'+allItems().length+' itens · use com os filtros</span></button></li>';
+    items+=eds.map(function(e){
+      var cnt=MODS.map(function(m){ return m[1]+' '+e.items.filter(function(i){return i.module===m[0]}).length; }).join(' · ');
+      return '<li><button type="button" data-ed="'+e.id+'" aria-current="'+(state.ed===e.id)+'"><span class="t">Nº '+e.id+' · '+fmt(e.date)+(e===latest?' <span class="badge">atual</span>':'')+'</span><span class="s">'+cnt+'</span></button></li>';
+    }).join("");
+    $("edlist").innerHTML=items;
+
+    var h = all ? "#arquivo" : (ed===latest ? "" : "#edicao-"+ed.id);
+    setHash(h);
+  }
+  function setHash(h){ if(location.hash!==h){ try{ history.replaceState(null,"",h||location.pathname+location.search); }catch(e){} } }
+
+  /* ---------- integrações ---------- */
+  var I = window.RADAR_INT || {items:[]};
+  var ist = {area:"all", q:"", open:null};
+  var LV = {oficial:"oficial", fabricante:"fabricante", servicenow:"servicenow", comunidade:"comunidade"};
+  function ul(a,tag){ return a&&a.length ? '<'+(tag||'ul')+'>'+a.map(function(s){return '<li>'+s+'</li>'}).join("")+'</'+(tag||'ul')+'>' : ""; }
+  var ST = {"sem solução":"st-open","limitação":"st-lim","contorno":"st-work","ver KB":"st-kb","mudança":"st-kb","observação":"st-kb","resolvido":"st-ok"};
+  var STO = {"sem solução":0,"limitação":1,"contorno":2,"ver KB":3,"mudança":4,"observação":5,"resolvido":6};
+  function ym(d){ if(!d) return ""; var p=d.split("-"); return p[1]+"/"+p[0]; }
+  function sortIssues(a){ return a.slice().sort(function(x,y){ var o=function(z){return z.status in STO ? STO[z.status] : 9}; var s=o(x)-o(y); return s || ((y.date||"")>(x.date||"")?1:-1); }); }
+  function issueHtml(x){
+    return '<div class="issue"><div class="ih"><span class="lvl l-'+x.level+'">'+LV[x.level]+'</span>'+(x.status?'<span class="st '+(ST[x.status]||'st-kb')+'">'+x.status+'</span>':'')+(x.date?'<span class="when">relatado em '+ym(x.date)+'</span>':'')+'</div><span class="ip">'+x.problem+'</span><p>'+x.fix+'</p>'+(x.src?'<span class="is">Fonte: <a href="'+x.src.url+'" target="_blank" rel="noopener">'+x.src.title+'</a></span>':'')+'</div>';
+  }
+  function recentFeed(){
+    var all=[]; I.items.forEach(function(it){ it.issues.forEach(function(x){ if(x.date) all.push({it:it,x:x}); }); });
+    all.sort(function(a,b){ var k=(b.x.date||"").localeCompare(a.x.date||""); return k || (b.x.added||"").localeCompare(a.x.added||""); });
+    var top=all.slice(0,6); if(!top.length) return "";
+    return '<section class="feed"><div class="fhead"><span class="label">Radar de erros</span><h2>Erros conhecidos mais recentes</h2><p>Problemas relatados na Community, em KBs e pelos fabricantes, do mais novo para o mais antigo. Clique para abrir o guia da integração.</p></div><ul>'+
+      top.map(function(o){ return '<li><span class="fd">'+ym(o.x.date)+'</span><span class="fb"><a href="#int-'+o.it.id+'" data-iopen="'+o.it.id+'" class="fi">'+o.it.name+'</a> <span class="st '+(ST[o.x.status]||'st-kb')+'">'+o.x.status+'</span> <span class="lvl l-'+o.x.level+'">'+LV[o.x.level]+'</span><br><span class="fp">'+o.x.problem+'</span></span></li>'; }).join("")+'</ul></section>';
+  }
+  function intCard(it){
+    var procs=it.setup.map(function(p){return '<div class="proc"><h5>'+p.title+'</h5>'+(p.path?'<div class="path">'+p.path+'</div>':'')+ul(p.steps,'ol')+'</div>'}).join("");
+    var issues=sortIssues(it.issues).map(issueHtml).join("");
+    var docs=it.docs.map(function(d){return '<li><a href="'+d.url+'" target="_blank" rel="noopener">'+d.title+'</a></li>'}).join("");
+    return '<details class="int" id="int-'+it.id+'"'+(ist.open===it.id?' open':'')+'><summary><div class="ihead"><h3>'+it.name+'</h3><span class="tag t-'+(it.module||'secops')+'">'+(it.module==='irm'?'IRM':'SecOps')+'</span><span class="tag t-'+(it.module||'secops')+'">'+it.area.replace(/^IRM · /,'')+'</span><span class="open"></span></div><p>'+it.what+'</p></summary>'+
+      '<div class="ibody"><div class="appline">App: <strong>'+it.app+'</strong> · feito por: '+it.builtBy+'</div>'+
+      '<div class="isec"><h4>Compatibilidade</h4>'+ul(it.compat)+'</div>'+
+      '<div class="cols"><div class="isec"><h4>Do lado do fornecedor</h4>'+ul(it.vendorSide)+'</div><div class="isec"><h4>Na ServiceNow (roles)</h4>'+ul(it.snSide)+'</div></div>'+
+      '<div class="isec"><h4>Instalação e configuração</h4>'+procs+'</div>'+
+      '<div class="isec"><h4>Como saber se funcionou</h4>'+ul(it.validate)+'</div>'+
+      '<div class="isec"><h4>Erros comuns e soluções</h4>'+issues+'</div>'+
+      '<div class="isec"><h4>Documentação</h4><ul>'+docs+'</ul></div></div></details>';
+  }
+  function intMatch(it){
+    if(ist.area!=="all" && it.area!==ist.area) return false;
+    if(ist.q && strip(JSON.stringify(it)).indexOf(ist.q)<0) return false;
+    return true;
+  }
+  function renderInt(){
+    var areas=[], amod={}; I.items.forEach(function(it){ if(areas.indexOf(it.area)<0){ areas.push(it.area); amod[it.area]=it.module||'secops'; } });
+    $("iareas").innerHTML='<span class="label" style="margin-right:4px">Área</span><button type="button" class="chip secops" data-iarea="all" aria-pressed="'+(ist.area==="all")+'">Todas</button>'+areas.map(function(a){return '<button type="button" class="chip '+amod[a]+'" data-iarea="'+a+'" aria-pressed="'+(ist.area===a)+'">'+a+'</button>'}).join("");
+    var list=I.items.filter(intMatch).sort(function(a,b){ return (a.module==='irm')-(b.module==='irm') || areas.indexOf(a.area)-areas.indexOf(b.area); });
+    $("istatus").innerHTML=list.length+" de "+I.items.length+" integrações"+((ist.area!=="all"||ist.q)?' · <button type="button" class="linkbtn" id="iclear">limpar filtros</button>':'');
+    $("iview").innerHTML=((ist.area==="all"&&!ist.q)?recentFeed():"")+(list.length?list.map(intCard).join(""):'<div class="empty">Nenhuma integração com esses filtros.</div>');
+    $("iidx").innerHTML=I.items.map(function(it){return '<li><a href="#int-'+it.id+'" data-iopen="'+it.id+'"><span>'+it.name+'</span><span class="a">'+it.area+'</span></a></li>'}).join("");
+    $("irev").innerHTML='<strong>Revisado em '+fmt(I.reviewed)+'</strong> com base na documentação da família '+I.release+'. Versões e telas mudam: confira o link oficial de cada passo.';
+    $("intcount").textContent=I.items.length;
+  }
+  /* ---------- Armis & Veza ---------- */
+  var AV = window.RADAR_AV || null;
+  var AVST = {"disponível":"st-ok","previsto":"st-work","anunciado":"st-lim","integração existente":"st-kb"};
+  function renderAV(){
+    if(!AV){ $("avview").innerHTML='<div class="empty">Dados indisponíveis.</div>'; return; }
+    var co=AV.companies.map(function(c){ return '<article class="avco"><div class="ahead"><span class="tag t-'+c.module+'">'+c.tag+'</span></div><h3>'+c.name+'</h3><p>'+c.what+'</p><dl class="row"><dt>Compra</dt><dd>'+c.deal+'</dd><dt>Hoje</dt><dd>'+c.today+'</dd><dt>Onde encaixa</dt><dd><ul>'+c.fits.map(function(f){return '<li>'+f+'</li>'}).join("")+'</ul></dd></dl><div class="src"><span class="label">Fonte</span><a href="'+c.src.url+'" target="_blank" rel="noopener">'+c.src.title+'</a></div></article>'; }).join("");
+    var order={"disponível":0,"integração existente":1,"previsto":2,"anunciado":3};
+    var st=AV.status.slice().sort(function(a,b){return order[a.status]-order[b.status]}).map(function(s){
+      return '<tr><td><span class="st '+(AVST[s.status]||'st-kb')+'">'+s.status+'</span><br><span class="when">'+s.when+'</span></td><td><strong>'+s.name+'</strong><br><span class="avwhat">'+s.what+'</span>'+(s.int?'<br><a href="#int-'+s.int+'" data-iopen="'+s.int+'" class="avlink">Ver guia de instalação →</a>':'')+'</td><td class="avl">'+s.link+'</td><td><a href="'+s.src+'" target="_blank" rel="noopener">fonte</a></td></tr>';
+    }).join("");
+    var tl=AV.timeline.map(function(t){ var p=t.date.split("-"); var d=p.length===3?p[2]+"/"+p[1]+"/"+p[0]:p[1]+"/"+p[0]; var fut=t.date>"2026-11-08"; return '<li class="'+(fut?'fut':'')+'"><span class="fd">'+d+'</span><span><a href="'+t.src+'" target="_blank" rel="noopener">'+t.title+'</a>'+(fut?' <span class="st st-work">previsto</span>':'')+'</span></li>'; }).join("");
+    var uc=AV.useCases.map(function(u){ return '<div class="sug"><span class="label">Sugestão · '+(u.module==='irm'?'IRM':'SecOps')+'</span><strong>'+u.title+'</strong><br>'+u.text+'</div>'; }).join("");
+    var qs='<ul>'+AV.questions.map(function(q){return '<li>'+q+'</li>'}).join("")+'</ul><div class="src"><span class="label">Fonte da pergunta em aberto</span><a href="'+AV.questionsSrc.url+'" target="_blank" rel="noopener">'+AV.questionsSrc.title+'</a></div>';
+    $("avview").innerHTML='<p class="lede avlede">'+AV.lede+'</p><div class="avgrid">'+co+'</div>'+
+      '<section class="group"><div class="ghead" style="--c:var(--fg)"><h2>Disponível vs. prometido</h2><span class="label">'+AV.status.length+' itens</span></div><div class="tbl"><table class="events avtable"><thead><tr><th>Status</th><th>Produto / capacidade</th><th>Ligação com Armis/Veza</th><th></th></tr></thead><tbody>'+st+'</tbody></table></div><p class="hnote">O anúncio de 04/08/2026 diz que as soluções são \"powered by\" Armis e Veza no geral, mas não liga cada produto a uma das duas. Onde a ligação não é explícita, a coluna diz isso.</p></section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--fg)"><h2>Linha do tempo</h2></div><div class="feed"><ul>'+tl+'</ul></div></section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--sug)"><h2>Como aproveitar</h2></div>'+uc+'</section>'+
+      '<section class="group"><div class="ghead" style="--c:var(--warn)"><h2>Perguntas em aberto</h2></div><article>'+qs+'</article></section>'+
+      '<p class="notes">Atualizado em '+fmt(AV.updated)+'. Fontes: newsroom e investor relations da ServiceNow, documentos da SEC, docs oficiais (release Brazil), ServiceNow Store e Community.</p>';
+  }
+  function setView(v){
+    var isInt=v==="int", isAV=v==="av";
+    $("intGrid").hidden=!isInt; $("avGrid").hidden=!isAV; $("newsGrid").hidden=isInt||isAV;
+    $("tab-int").setAttribute("aria-selected",String(isInt)); $("tab-av").setAttribute("aria-selected",String(isAV)); $("tab-news").setAttribute("aria-selected",String(!isInt&&!isAV));
+    if(isInt){ renderInt(); setHash(ist.open?"#int-"+ist.open:"#integracoes"); } else if(isAV){ renderAV(); setHash("#armis-veza"); } else { render(); }
+  }
+  function openInt(id){
+    ist.open=id; ist.area="all"; ist.q=""; $("iq").value=""; setView("int");
+    var el=$("int-"+id); if(el){ el.open=true; el.scrollIntoView({behavior:"smooth",block:"start"}); }
+  }
+
+  function renderEvents(){
+    var today=new Date(); today.setHours(0,0,0,0);
+    var up=(D.events||[]).filter(function(e){ return !e.date || new Date(e.date+"T23:59:59")>=today; })
+      .sort(function(a,b){ if(!a.date) return 1; if(!b.date) return -1; return a.date<b.date?-1:1; });
+    $("evlist").innerHTML = up.length ? up.map(function(e){
+      var d=e.date? e.date.slice(8,10)+"/"+e.date.slice(5,7) : "on-demand";
+      return '<li><span class="d">'+d+'</span><span><span class="e"><a href="'+e.url+'" target="_blank" rel="noopener">'+e.title+'</a></span><br><span class="x"><span class="tag t-'+e.module+'">'+e.module+'</span> '+(e.detail||"")+'</span></span></li>';
+    }).join("") : '<li><span class="d">—</span><span class="x">Nenhum evento futuro registrado.</span></li>';
+  }
+
+  function fromHash(){
+    var h=location.hash.replace("#","");
+    if(h==="armis-veza" && AV) return "av";
+    if(h==="integracoes" && I.items.length){ ist.open=null; return "int"; }
+    if(/^int-[a-z0-9-]+$/.test(h) && I.items.length){ ist.open=h.slice(4); return "int"; }
+    if(h==="arquivo") state.ed="all";
+    else if(/^edicao-\d+$/.test(h)){ var n=+h.split("-")[1]; if(eds.some(function(e){return e.id===n})) state.ed=n; }
+    else if(latest) state.ed=latest.id;
+    return "news";
+  }
+
+  document.addEventListener("click", function(ev){
+    var a=ev.target.closest("a[data-iopen]");
+    if(a){ ev.preventDefault(); openInt(a.dataset.iopen); return; }
+    var t=ev.target.closest("button"); if(!t) return;
+    if(t.dataset.view){ setView(t.dataset.view); window.scrollTo({top:0}); }
+    else if(t.dataset.iarea){ ist.area=t.dataset.iarea; renderInt(); }
+    else if(t.id==="iclear"){ ist.area="all"; ist.q=""; $("iq").value=""; renderInt(); }
+    else if(t.dataset.m){ state.mod=t.dataset.m; state.subs=[]; render(); }
+    else if(t.dataset.sub){ var s=t.dataset.sub, i=state.subs.indexOf(s); if(i>-1) state.subs.splice(i,1); else state.subs.push(s); render(); }
+    else if(t.dataset.ed){ state.ed = t.dataset.ed==="all" ? "all" : +t.dataset.ed; render(); window.scrollTo({top:0,behavior:"smooth"}); }
+    else if(t.id==="clear"){ state.mod="all"; state.subs=[]; state.q=""; $("q").value=""; render(); }
+    else if(t.id==="everywhere"){ state.ed="all"; render(); }
+  });
+  $("q").addEventListener("input", function(e){ state.q=e.target.value.trim().toLowerCase(); render(); });
+  $("iq").addEventListener("input", function(e){ ist.q=e.target.value.trim().toLowerCase(); renderInt(); });
+  document.addEventListener("toggle", function(e){
+    var d=e.target; if(!d.classList || !d.classList.contains("int")) return;
+    var id=d.id.slice(4);
+    if(d.open){ ist.open=id; setHash("#int-"+id); } else if(ist.open===id){ ist.open=null; setHash("#integracoes"); }
+  }, true);
+  window.addEventListener("hashchange", function(){
+    var v=fromHash(); setView(v);
+    if(v==="int" && ist.open){ var el=$("int-"+ist.open); if(el){ el.open=true; el.scrollIntoView({block:"start"}); } }
+  });
+
+  renderEvents();
+  $("intcount").textContent=I.items.length;
+  if(!I.items.length) $("tab-int").hidden=true;
+  if(!AV) $("tab-av").hidden=true;
+  if(!I.items.length && !AV) document.querySelector(".tabs").hidden=true;
+  var v0=fromHash(); setView(v0);
+  if(v0==="int" && ist.open){ var el0=$("int-"+ist.open); if(el0){ el0.open=true; setTimeout(function(){ el0.scrollIntoView({block:"start"}); },50); } }
+})();
+</script>
+
+</body>
+</html>
