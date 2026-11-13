@@ -130,12 +130,10 @@ for (const { m, eds, ints } of summaries) {
 const news = INDEX.filter(x => x.k === 'n').sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.alert - a.alert));
 const latestDate = news.length ? news[0].date : '';
 const featured = news.filter(x => x.date === latestDate).sort((a, b) => b.alert - a.alert)[0] || news[0];
-const focusMod = featured ? featured.mod : '';
 const tiles = summaries.map(({ m, latest }) => {
-  const focus = m.slug === focusMod;
   const when = latest ? 'Atualizado em ' + fmt(latest.date) : 'Sem edições ainda';
   const next = '&#8635; ' + m.sched.replace('toda ', '').replace(', por volta das ', ' · ');
-  return '<a class="tile' + (focus ? ' focus' : '') + '" href="' + m.slug + '/"' + '' + '>' +
+  return '<a class="tile" href="' + m.slug + '/"' + '' + '>' +
     '<i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i>' +
     '<span class="tn">' + m.short + '</span>' +
     '<span class="tl">' + m.label + '</span>' +
@@ -166,10 +164,6 @@ ${css}
 .tl{font-size:.88rem;color:var(--muted);margin-bottom:10px}
 .tw{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .ts{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.tile.focus{background:var(--bar);border-color:var(--bar);color:#000}
-.tile.focus i,.tile.focus .tl,.tile.focus .tw,.tile.focus .ts{color:#000}
-.tile.focus .tw strong{font-weight:700}
-.tile.focus:hover{border-color:#000}
 @media (max-width:520px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile{padding:16px} .tl{display:none} }
 </style>
 <div class="shell">
