@@ -1,7 +1,7 @@
 /* Comunicados: faixa verde na página inicial (3 mais recentes) e página própria em comunicados/ (todos).
    Para publicar um aviso: adicione um objeto no INÍCIO de window.RADAR_COM e rode `node build.js`.
    Campos: date "AAAA-MM-DD" (dia em que entrou no Radar), title, text (resumo de uma linha; pode ter HTML simples),
-   ref (opcional: número do comunicado, ex. "COMM3378032"), source (opcional: ex. "ServiceNow"),
+   slug (opcional: âncora fixa, vira #c-<slug>), ref (opcional: número do comunicado, ex. "COMM3378032"), source (opcional: ex. "ServiceNow"),
    prazo (opcional: data ou janela de ação), body (opcional: HTML com <h3> e <ul>, só aparece na página),
    links (opcional: [{ title, url, note }]), url (opcional: link "Saiba mais").
    As tarefas semanais não mexem neste arquivo. */
@@ -9,6 +9,7 @@ var KB = "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article="
 window.RADAR_COM = [
   {
     date: "2026-11-13",
+    slug: "basic-auth",
     ref: "COMM3378032",
     source: "ServiceNow",
     title: "Basic Authentication deixa de ser suportada em integrações de entrada",
@@ -35,6 +36,7 @@ window.RADAR_COM = [
   },
   {
     date: "2026-11-13",
+    slug: "getrefrecord",
     ref: "COMM3443886",
     source: "ServiceNow",
     title: "getRefRecord() entre escopos ganha checagem de segurança na Brazil",

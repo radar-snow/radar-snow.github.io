@@ -91,6 +91,13 @@ aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(s
 .t-secops{background:var(--secops-soft);color:var(--secops)}
 .t-irm{background:var(--irm-soft);color:var(--irm)}
 .t-warn{background:var(--warn-soft);color:var(--warn)}
+.inotice{border:1px solid var(--warn);border-left:6px solid var(--warn);background:var(--surface);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.inotice h3{font-size:1.1rem}
+.inotice p{margin:0}
+.inh{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.inp{font-size:.82rem;font-weight:600;color:var(--warn)}
+.ins{background:var(--sug-soft);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:.95rem}
+.inl{align-self:flex-start;font-weight:600;color:var(--warn)}
 .t-geral{background:var(--hover);color:var(--muted)}
 
 .group{display:flex;flex-direction:column;gap:14px;margin-top:22px}
@@ -281,7 +288,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     <p>Avisos do time e comunicados da ServiceNow que pedem atenção ou ação, do mais recente para o mais antigo.</p>
   </header>
   <main class="clist">
-    <article class="citem" id="c-2026-11-13-3">
+    <article class="citem" id="c-basic-auth">
       <div class="cmeta"><span class="cd">13/11/2026</span><span class="cref">COMM3378032</span><span class="csrc">ServiceNow</span></div>
       <h2>Basic Authentication deixa de ser suportada em integrações de entrada</h2>
       <p class="cprazo"><i class="ti ti-calendar-due" aria-hidden="true"></i><strong>Prazo:</strong> agir até novembro de 2027 (release Denmark)</p>
@@ -290,7 +297,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
       <div class="clinks"><h3>Referências</h3><ul><li><a href="https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=KB3220405">KB3220405: identificar e migrar integrações com Basic Authentication</a> <span class="cn">(exige login no Now Support)</span></li><li><a href="https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=KB3025707">KB3025707: atualização de segurança de junho de 2026</a> <span class="cn">(exige login no Now Support)</span></li></ul></div>
       
     </article>
-    <article class="citem" id="c-2026-11-13-2">
+    <article class="citem" id="c-getrefrecord">
       <div class="cmeta"><span class="cd">13/11/2026</span><span class="cref">COMM3443886</span><span class="csrc">ServiceNow</span></div>
       <h2>getRefRecord() entre escopos ganha checagem de segurança na Brazil</h2>
       <p class="cprazo"><i class="ti ti-calendar-due" aria-hidden="true"></i><strong>Prazo:</strong> release Brazil (novembro de 2026)</p>

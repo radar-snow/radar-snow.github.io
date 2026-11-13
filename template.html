@@ -81,6 +81,13 @@ aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(s
 .t-secops{background:var(--secops-soft);color:var(--secops)}
 .t-irm{background:var(--irm-soft);color:var(--irm)}
 .t-warn{background:var(--warn-soft);color:var(--warn)}
+.inotice{border:1px solid var(--warn);border-left:6px solid var(--warn);background:var(--surface);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.inotice h3{font-size:1.1rem}
+.inotice p{margin:0}
+.inh{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.inp{font-size:.82rem;font-weight:600;color:var(--warn)}
+.ins{background:var(--sug-soft);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:.95rem}
+.inl{align-self:flex-start;font-weight:600;color:var(--warn)}
 .t-geral{background:var(--hover);color:var(--muted)}
 
 .group{display:flex;flex-direction:column;gap:14px;margin-top:22px}
@@ -479,10 +486,13 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
     $("iareas").innerHTML='<span class="label" style="margin-right:4px">Área</span><button type="button" class="chip secops" data-iarea="all" aria-pressed="'+(ist.area==="all")+'">Todas</button>'+areas.map(function(a){return '<button type="button" class="chip '+amod[a]+'" data-iarea="'+a+'" aria-pressed="'+(ist.area===a)+'">'+a+'</button>'}).join("");
     var list=I.items.filter(intMatch).sort(function(a,b){ return (a.module==='irm')-(b.module==='irm') || areas.indexOf(a.area)-areas.indexOf(b.area); });
     $("istatus").innerHTML=list.length+" de "+I.items.length+" integrações"+((ist.area!=="all"||ist.q)?' · <button type="button" class="linkbtn" id="iclear">limpar filtros</button>':'');
-    $("iview").innerHTML=((ist.area==="all"&&!ist.q)?recentFeed():"")+(list.length?list.map(intCard).join(""):'<div class="empty">Nenhuma integração com esses filtros.</div>');
+    $("iview").innerHTML=intNotices()+((ist.area==="all"&&!ist.q)?recentFeed():"")+(list.length?list.map(intCard).join(""):'<div class="empty">Nenhuma integração com esses filtros.</div>');
     $("iidx").innerHTML=I.items.map(function(it){return '<li><a href="#int-'+it.id+'" data-iopen="'+it.id+'"><span>'+it.name+'</span><span class="a">'+it.area+'</span></a></li>'}).join("");
     $("irev").innerHTML='<strong>Revisado em '+fmt(I.reviewed)+'</strong> com base na documentação da família '+I.release+'. Versões e telas mudam: confira o link oficial de cada passo.';
     $("intcount").textContent=I.items.length;
+  }
+  function intNotices(){
+    return (I.notices||[]).map(function(n){ return '<aside class="inotice" role="note"><p class="inh"><span class="tag t-warn">'+(n.tag||'atenção')+'</span>'+(n.prazo?'<span class="inp">Prazo: '+n.prazo+'</span>':'')+'</p><h3>'+n.title+'</h3><p>'+n.html+'</p>'+(n.suggestion?'<p class="ins">'+n.suggestion+'</p>':'')+(n.url?'<a class="inl" href="'+n.url+'">'+(n.urlLabel||'Ver comunicado')+' &#8594;</a>':'')+'</aside>'; }).join("");
   }
   /* ---------- Armis & Veza ---------- */
   var AV = window.RADAR_AV || null;

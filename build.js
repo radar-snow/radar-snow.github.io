@@ -146,7 +146,7 @@ require('vm').runInNewContext(fs.readFileSync(path.join(__dirname, 'comunicados.
 const allComs = (comCtx.window.RADAR_COM || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 // âncora de cada aviso na página: c-AAAA-MM-DD (com -2, -3... se houver mais de um no mesmo dia)
 const comSeen = {};
-allComs.slice().reverse().forEach(c => { const k = c.date || 'sem-data'; comSeen[k] = (comSeen[k] || 0) + 1; c.id = 'c-' + k + (comSeen[k] > 1 ? '-' + comSeen[k] : ''); });
+allComs.slice().reverse().forEach(c => { const k = c.date || 'sem-data'; comSeen[k] = (comSeen[k] || 0) + 1; c.id = c.slug ? 'c-' + c.slug : 'c-' + k + (comSeen[k] > 1 ? '-' + comSeen[k] : ''); });
 const comHtml = '<section class="com" aria-labelledby="com-h">\n    <h2 id="com-h"><a href="comunicados/"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</a></h2>\n    ' +
   (allComs.length
     ? '<ul>' + allComs.slice(0, 3).map(c => '<li>' + (c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : '') +

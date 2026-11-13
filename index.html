@@ -95,6 +95,13 @@ aside{display:flex;flex-direction:column;gap:24px;position:sticky;top:calc(env(s
 .t-secops{background:var(--secops-soft);color:var(--secops)}
 .t-irm{background:var(--irm-soft);color:var(--irm)}
 .t-warn{background:var(--warn-soft);color:var(--warn)}
+.inotice{border:1px solid var(--warn);border-left:6px solid var(--warn);background:var(--surface);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.inotice h3{font-size:1.1rem}
+.inotice p{margin:0}
+.inh{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.inp{font-size:.82rem;font-weight:600;color:var(--warn)}
+.ins{background:var(--sug-soft);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:.95rem}
+.inl{align-self:flex-start;font-weight:600;color:var(--warn)}
 .t-geral{background:var(--hover);color:var(--muted)}
 
 .group{display:flex;flex-direction:column;gap:14px;margin-top:22px}
@@ -294,7 +301,7 @@ details.int > summary p{margin:0;color:var(--muted);font-size:.97rem}
   </header>
   <section class="com" aria-labelledby="com-h">
     <h2 id="com-h"><a href="comunicados/"><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</a></h2>
-    <ul><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-2026-11-13-3">Basic Authentication deixa de ser suportada em integrações de entrada</a></span><span class="cp">Prazo: agir até novembro de 2027 (release Denmark)</span><span class="cx">A partir da Denmark, usuário e senha em requisições de API de entrada (REST, SOAP e outras) deixam de ter suporte. A recomendação é migrar para OAuth 2.0, mTLS ou token federado.</span></li><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-2026-11-13-2">getRefRecord() entre escopos ganha checagem de segurança na Brazil</a></span><span class="cp">Prazo: release Brazil (novembro de 2026)</span><span class="cx">Uma nova propriedade controla a checagem de escopo quando getRefRecord() é usado entre aplicações: ligada por padrão em instâncias novas na Brazil e desligada em instâncias que fizerem upgrade.</span></li><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-2026-11-13">Radar agora com 12 módulos</a></span><span class="cx">Entraram ITOM, APM/EA, Otto, DPM/DPR e ITAM. Cada módulo é atualizado uma vez por semana, no dia indicado no bloco.</span></li></ul>
+    <ul><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-basic-auth">Basic Authentication deixa de ser suportada em integrações de entrada</a></span><span class="cp">Prazo: agir até novembro de 2027 (release Denmark)</span><span class="cx">A partir da Denmark, usuário e senha em requisições de API de entrada (REST, SOAP e outras) deixam de ter suporte. A recomendação é migrar para OAuth 2.0, mTLS ou token federado.</span></li><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-getrefrecord">getRefRecord() entre escopos ganha checagem de segurança na Brazil</a></span><span class="cp">Prazo: release Brazil (novembro de 2026)</span><span class="cx">Uma nova propriedade controla a checagem de escopo quando getRefRecord() é usado entre aplicações: ligada por padrão em instâncias novas na Brazil e desligada em instâncias que fizerem upgrade.</span></li><li><span class="cd">13/11/2026</span><span class="ct"><a href="comunicados/#c-2026-11-13">Radar agora com 12 módulos</a></span><span class="cx">Entraram ITOM, APM/EA, Otto, DPM/DPR e ITAM. Cada módulo é atualizado uma vez por semana, no dia indicado no bloco.</span></li></ul>
     <a class="cmore" href="comunicados/">Ver todos os comunicados &#8594;</a>
   </section>
   <nav class="tiles" aria-label="Módulos">

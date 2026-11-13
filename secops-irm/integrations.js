@@ -5,6 +5,17 @@ var __DOCS = "https://www.servicenow.com/docs/r/security-management/";
 window.RADAR_INT = {
   "reviewed": "2026-11-08",
   "release": "Brazil",
+  "notices": [
+    {
+      "tag": "atenção",
+      "prazo": "novembro de 2027 (release Denmark)",
+      "title": "Basic Authentication em integrações de entrada perde suporte",
+      "html": "O comunicado <strong>COMM3378032</strong> da ServiceNow encerra o suporte a usuário e senha em requisições de API <strong>de entrada</strong> (REST, SOAP e outras), inclusive em contas de serviço (Web Service Access Only). Revise as integrações em que um sistema externo chama a instância com usuário e senha e migre para OAuth 2.0, mutual TLS (mTLS) ou token federado. O KB3220405 mostra como identificar essas integrações e como migrar.",
+      "suggestion": "<em>Sugestão:</em> na maioria dos guias desta aba, a ServiceNow busca os dados na ferramenta e se autentica nela (API key, token ou OAuth). Esse sentido não é o afetado. Priorize o que envia dados <strong>para</strong> a instância, como webhooks, envio de alertas e scripts que chamam a API da ServiceNow.",
+      "url": "https://radar-snow.github.io/comunicados/#c-basic-auth",
+      "urlLabel": "Ver o comunicado completo"
+    }
+  ],
   "items": [
     {
       "id": "tenable",
