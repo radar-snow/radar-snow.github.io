@@ -72,7 +72,14 @@ for (const m of MODULES) {
   global.window = {};
   require(path.join(dir, 'editions.js'));
   const eds = (window.RADAR.editions || []).slice().sort((a, b) => b.id - a.id);
-  summaries.push({ m, latest: eds[0], count: eds.length, hasInt: fs.existsSync(path.join(dir, 'integrations.js')), hasAV: fs.existsSync(path.join(dir, 'armis-veza.js')) });
+  let ints = [];
+  if (fs.existsSync(path.join(dir, 'integrations.js'))) {
+    global.window = {};
+    require(path.join(dir, 'integrations.js'));
+    ints = (window.RADAR_INT && window.RADAR_INT.items) || [];
+    delete require.cache[require.resolve(path.join(dir, 'integrations.js'))];
+  }
+  summaries.push({ m, eds, latest: eds[0], count: eds.length, ints, hasInt: ints.length > 0, hasAV: fs.existsSync(path.join(dir, 'armis-veza.js')) });
   delete require.cache[require.resolve(path.join(dir, 'editions.js'))];
 }
 // versão do Artifact (SecOps & IRM)
@@ -81,14 +88,37 @@ fs.writeFileSync(path.join(__dirname, 'secops-irm', 'artifact.html'), render(MOD
 // página inicial
 const css = tpl.match(/<style>[\s\S]*?<\/style>/g).find(x => x.includes('--bg:'));
 const fmt = d => { const p = d.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
-const cards = summaries.map(({ m, latest, count, hasInt, hasAV }) => {
-  const bullets = latest ? latest.summary.slice(0, 3).map(s => '<li><span class="tag t-' + s.module + '">' + s.tag + '</span> ' + s.html + '</li>').join('') : '';
-  const extras = [count + (count > 1 ? ' edições' : ' edição'), hasInt ? 'guia de integrações' : '', hasAV ? 'Armis & Veza' : ''].filter(Boolean).join(' · ');
-  return '<article class="mcard"><div class="mtop"><span class="label">' + m.label + '</span>' + (latest ? '<span class="when">Edição nº ' + latest.id + ' · ' + fmt(latest.date) + '</span>' : '') + '</div>' +
-    '<h2><a href="' + m.slug + '/">' + m.short + '</a></h2><p class="mdesc">' + m.desc + '</p>' +
-    (bullets ? '<ol class="mlist">' + bullets + '</ol>' : '') +
-    '<div class="mfoot"><span class="mx">' + extras + '</span><a class="docbtn" href="' + m.slug + '/">Abrir ' + m.short + ' →</a></div></article>';
+const ICONS = { 'secops-irm': 'ti-shield-lock', itsm: 'ti-headset', ham: 'ti-device-laptop', sam: 'ti-license', fsm: 'ti-truck', hrsd: 'ti-users' };
+const strip = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/\s+/g, ' ').trim();
+const today = new Date().toISOString().slice(0, 10);
+const cut = (s, n) => s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n)).replace(/[,.;:]$/, '') + '…';
+// índice de busca e feed: itens de todas as edições + guias de integração
+const INDEX = [];
+for (const { m, eds, ints } of summaries) {
+  eds.forEach((e, ei) => e.items.forEach(it => INDEX.push({
+    k: 'n', mod: m.slug, short: m.short, date: e.date, ed: e.id, alert: !!it.alert,
+    title: strip(it.title), kicker: strip(it.kicker), subs: it.subs,
+    url: m.slug + '/' + (ei === 0 ? '' : '#edicao-' + e.id),
+    hay: strip([it.title, it.kicker, it.subs.join(' '), it.rows.map(r => r[0] + ' ' + r[1]).join(' '), it.suggestion, JSON.stringify(it.howto || [])].join(' ')).toLowerCase(),
+    lede: cut(strip((it.rows[0] || [])[1]), 240)
+  })));
+  ints.forEach(it => INDEX.push({
+    k: 'g', mod: m.slug, short: m.short, title: 'Guia: ' + strip(it.name), kicker: strip(it.area), subs: [],
+    url: m.slug + '/#int-' + it.id, hay: strip([it.name, it.area, it.what, it.app, (it.issues || []).map(x => x.problem).join(' ')].join(' ')).toLowerCase(), lede: cut(strip(it.what), 240)
+  }));
+}
+// destaque da semana: item mais recente com alerta; senão, o mais recente
+const news = INDEX.filter(x => x.k === 'n').sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.alert - a.alert));
+const latestDate = news.length ? news[0].date : '';
+const featured = news.filter(x => x.date === latestDate).sort((a, b) => b.alert - a.alert)[0] || news[0];
+const rail = summaries.map(({ m, latest }) => {
+  const isNew = latest && (Date.parse(today) - Date.parse(latest.date)) / 864e5 <= 7;
+  return '<a class="rc" href="' + m.slug + '/"><i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i><span class="rn">' + m.short + '</span>' +
+    '<span class="rm">' + (latest ? latest.items.length + ' itens · ' + fmt(latest.date) : 'sem edições') + '</span>' + (isNew ? '<span class="dot" title="Edição nova nesta semana"></span>' : '') + '</a>';
 }).join('\n');
+const featHtml = featured ? '<a class="feat" href="' + featured.url + '"><span class="label fk">Destaque da semana · ' + featured.short + (featured.alert ? ' · ação' : '') + '</span><span class="ft">' + featured.title + '</span><span class="fl">' + featured.lede + '</span><span class="fgo">Abrir ' + featured.short + ' →</span></a>' : '';
+const pills = '<button type="button" class="chip" data-hm="all" aria-pressed="true">Todos</button>' + summaries.map(({ m }) => '<button type="button" class="chip" data-hm="' + m.slug + '" aria-pressed="false">' + m.short + '</button>').join('');
+const dataJs = 'window.RADAR_HOME=' + JSON.stringify(INDEX.map(x => Object.assign({}, x))) + ';';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
 const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: SecOps & IRM, ITSM, HAM, SAM, FSM e HRSD.') +
 `<title>Radar ServiceNow</title>
@@ -101,30 +131,79 @@ const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por 
 </script>
 ${css}
 <style>
-.mgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.mcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.mcard h2{font-size:1.6rem}
-.mcard h2 a{text-decoration:none}
-.mcard h2 a:hover{text-decoration:underline}
-.mtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;align-items:baseline}
-.mtop .when{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.mdesc{margin:0;color:var(--muted);font-size:.95rem}
-.mlist{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
-.mfoot{margin-top:auto;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px dashed var(--line)}
-.mx{font-size:.85rem;color:var(--muted)}
-@media (max-width:820px){ .mgrid{grid-template-columns:minmax(0,1fr)} }
+.brand{font-family:var(--display);font-size:clamp(2rem,5vw,2.8rem);font-weight:700;margin:0;line-height:1.1}
+.brand em{font-style:normal;color:var(--bar)}
+.rail{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.rc{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+.rc:hover{border-color:var(--accent);transform:translateY(-2px)}
+.rc i{font-size:26px;color:var(--accent)}
+.rn{font-family:var(--display);font-weight:700;font-size:1.15rem}
+.rm{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.dot{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--bar)}
+.feat{display:flex;flex-direction:column;gap:6px;padding:22px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:inset 4px 0 0 var(--bar);text-decoration:none;color:var(--fg)}
+.feat:hover{border-color:var(--accent)}
+.fk{color:var(--accent)}
+.ft{font-family:var(--display);font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;line-height:1.2;text-wrap:balance}
+.fl{color:var(--muted);max-width:75ch}
+.fgo{font-weight:600;color:var(--accent);font-size:.95rem}
+.find{display:flex;flex-direction:column;gap:12px}
+.sbox{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 18px}
+.sbox:focus-within{border-color:var(--accent)}
+.sbox svg{flex:none;color:var(--muted)}
+.sbox input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1.05rem;color:var(--fg);padding:10px 0;outline:none}
+.hpills{display:flex;flex-wrap:wrap;gap:6px}
+.hfeed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.hfeed li a{display:grid;grid-template-columns:72px 92px minmax(0,1fr);gap:12px;padding:12px 18px;text-decoration:none;color:var(--fg);border-top:1px solid var(--line)}
+.hfeed li:first-child a{border-top:0}
+.hfeed li a:hover{background:var(--hover)}
+.hd{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.hm{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.ht{font-weight:600}
+.hk{display:block;font-size:.85rem;color:var(--muted)}
+.hcount{font-size:.88rem;color:var(--muted)}
+@media (max-width:900px){ .rail{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:560px){ .rail{grid-template-columns:repeat(2,minmax(0,1fr))} .hfeed li a{grid-template-columns:minmax(0,1fr)} .hd,.hm{padding-top:0} }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <div class="shell">
   <header class="top">
     <div class="toprow">
       <span class="label">ServiceNow · novidades oficiais por módulo</span>
       ${themeBlock}
-    <h1>Radar ServiceNow</h1>
-    <p>Um radar para cada módulo da ServiceNow: novidades oficiais resumidas, com casos de uso, tutoriais e links para as fontes. Escolha o módulo e salve o link. Cada um é atualizado toda semana.</p>
+    <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
+    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Atualizado toda semana.</p>
   </header>
-  <main class="mgrid">
-${cards}
-  </main>
+  <nav class="rail" aria-label="Módulos">
+${rail}
+  </nav>
+  ${featHtml}
+  <section class="find" aria-label="Buscar nas novidades">
+    <label class="sbox" for="hq"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input id="hq" type="search" placeholder="Buscar em todos os módulos: USEM, SAP, e-signature, Tenable..." autocomplete="off"></label>
+    <div class="hpills" role="group" aria-label="Filtrar por módulo">${pills}</div>
+    <span class="hcount" id="hcount"></span>
+    <ul class="hfeed" id="hfeed"></ul>
+  </section>
+<script>${dataJs}</script>
+<script>
+(function(){
+  var D=window.RADAR_HOME||[], st={q:"",m:"all"};
+  function fmt(d){ if(!d) return "guia"; var p=d.split("-"); return p[2]+"/"+p[1]; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function render(){
+    var q=st.q, list=D.filter(function(x){ return (st.m==="all"||x.mod===st.m) && (q ? x.hay.indexOf(q)>-1 : x.k==="n"); });
+    list.sort(function(a,b){ return (b.date||"").localeCompare(a.date||"") || (b.alert-a.alert); });
+    var shown=q?list:list.slice(0,12);
+    document.getElementById("hcount").textContent = q ? list.length+" resultado"+(list.length===1?"":"s")+" para \\""+q+"\\"" : "Últimas novidades"+(st.m==="all"?" de todos os módulos":"");
+    document.getElementById("hfeed").innerHTML = shown.length ? shown.map(function(x){
+      return '<li><a href="'+x.url+'"><span class="hd">'+fmt(x.date)+'</span><span class="hm">'+esc(x.short)+'</span><span><span class="ht">'+esc(x.title)+'</span><span class="hk">'+esc(x.kicker)+'</span></span></a></li>';
+    }).join("") : '<li><a href="#" onclick="return false"><span class="hd">—</span><span class="hm"></span><span class="ht">Nada encontrado. Tente outro termo ou limpe o filtro.</span></a></li>';
+    document.querySelectorAll("[data-hm]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-hm")===st.m)); });
+  }
+  document.getElementById("hq").addEventListener("input", function(e){ st.q=e.target.value.trim().toLowerCase(); render(); });
+  document.addEventListener("click", function(e){ var b=e.target.closest("[data-hm]"); if(!b) return; st.m=b.getAttribute("data-hm"); render(); });
+  render();
+})();
+</script>
   <p class="notes">Fontes: documentação oficial da ServiceNow (release notes), newsroom e posts da ServiceNow na Community. Não é um produto oficial da ServiceNow. As sugestões de aplicação são interpretação e vêm marcadas como tal.</p>
 </div>
 ` + foot;
