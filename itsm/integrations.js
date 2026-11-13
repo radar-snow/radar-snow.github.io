@@ -4,7 +4,6 @@
 var __D = "https://www.servicenow.com/docs/r/";
 var __SIR = __D + "security-management/security-incident-response/";
 var __EXP = __D + "employee-service-management/employee-experience-foundation/";
-var __MID = __D + "servicenow-platform/mid-server/";
 var __KB = "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=";
 var __IBM = "https://ibmresilient.github.io/resilient-community-apps/fn_service_now/docs/install_guide/README.html";
 window.RADAR_INT = {
@@ -182,64 +181,6 @@ window.RADAR_INT = {
         { "title": "Integrating ServiceNow with Microsoft Teams and Microsoft 365", "url": __EXP + "setup-sn-ms-teams.html" },
         { "title": "ServiceNow for Microsoft Teams and Microsoft 365", "url": __EXP + "c_ServiceNowForMSTeams.html" },
         { "title": "Collaboration services (Teams e Slack em incidentes)", "url": __D + "it-service-management/collaboration-services/collab-services-tcm.html" }
-      ]
-    },
-    {
-      "id": "mid-server",
-      "name": "MID Server",
-      "area": "Plataforma",
-      "what": "Aplicação Java instalada na rede da empresa que faz a ponte entre a instância e sistemas internos ou atrás de firewall. Integrações como o SOAR podem depender dele.",
-      "app": "MID Server (plataforma)",
-      "builtBy": "ServiceNow",
-      "compat": [
-        "Windows Server 2012 a 2025 (com .NET Framework 4.5+) ou Linux Red Hat 6+, Ubuntu 14+ e CentOS 9+, sempre 64 bits.",
-        "O MID acompanha a versão da instância: quando a instância sobe de release, ele baixa o pacote novo de <code>install.service-now.com</code> e se atualiza sozinho."
-      ],
-      "vendorSide": [
-        "Host com acesso de saída a <code>install.service-now.com</code> (upgrade automático) e aos servidores OCSP da DigiCert.",
-        "Se houver proxy ou appliance com certificado interno ou autoassinado, importe o certificado no trust store do MID."
-      ],
-      "snSide": [
-        "Usuário com papel <code>mid_server</code> para o MID se conectar à instância."
-      ],
-      "setup": [
-        {
-          "title": "Depois de cada upgrade da instância",
-          "path": "MID Server &gt; Servers",
-          "steps": [
-            "Confira se todos os MIDs subiram para a versão nova e estão <strong>Up</strong> e <strong>Validated</strong>.",
-            "Veja o histórico em <strong>MID Server Upgrade History</strong> e os problemas em MID Server Issues.",
-            "Leia as release notes combinadas do MID para o seu salto de versão."
-          ]
-        }
-      ],
-      "validate": [
-        "MID com status Up, Validated e versão igual à da instância.",
-        "As integrações que usam o MID (ex.: saída para o SOAR) voltam a responder após o upgrade."
-      ],
-      "issues": [
-        {
-          "added": "2026-11-13",
-          "level": "oficial",
-          "status": "ver KB",
-          "problem": "MID não faz o upgrade automático em host Windows",
-          "fix": "Causas documentadas: serviço <strong>Windows Application Experience</strong> desligado (KB0597552) ou antivírus bloqueando o upgrade (KB0870329).",
-          "src": { "title": "MID Server upgrades (doc Brazil)", "url": __MID + "c_UpgradeAndTestMIDServer.html" }
-        },
-        {
-          "added": "2026-11-13",
-          "level": "oficial",
-          "status": "ver KB",
-          "problem": "MID para de funcionar por bloqueio de OCSP no firewall ou proxy",
-          "fix": "Libere o tráfego para os servidores OCSP da DigiCert. Detalhes e soluções no KB1216223.",
-          "src": { "title": "KB1216223 (Now Support)", "url": __KB + "KB1216223" }
-        }
-      ],
-      "docs": [
-        { "title": "MID Server system requirements", "url": __MID + "r_MIDServerSystemRequirements.html" },
-        { "title": "MID Server upgrades", "url": __MID + "c_UpgradeAndTestMIDServer.html" },
-        { "title": "MID Server Upgrade History", "url": __MID + "mid-server-upgrade-history.html" },
-        { "title": "Release notes do MID: Australia → Brazil", "url": __D + "delta-australia-brazil/brazil-australia-midserver-release-notes.html" }
       ]
     }
   ]
