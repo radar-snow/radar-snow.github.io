@@ -29,7 +29,10 @@ const MODULES = [
     mods: [['secops', 'FSM', 'Field Service Management']] },
   { slug: 'hrsd', sched: 'toda terça, por volta das 9h', title: 'Radar HRSD', short: 'HRSD', label: 'HR Service Delivery', lede: LEDE_BASE,
     desc: 'Case and Knowledge Management, Employee Center, EmployeeWorks, Lifecycle Events e Otto for HRSD.',
-    mods: [['secops', 'HRSD', 'HR Service Delivery']] }
+    mods: [['secops', 'HRSD', 'HR Service Delivery']] },
+  { slug: 'spm', sched: 'toda quinta, por volta das 8h', title: 'Radar SPM', short: 'SPM', label: 'Strategic Portfolio Management', lede: LEDE_BASE,
+    desc: 'Portfólio, demandas, projetos, recursos, metas e estratégia, Agile e Otto/MCP para SPM.',
+    mods: [['secops', 'SPM', 'Strategic Portfolio Management']] }
 ];
 const DATA_FILES = ['editions.js', 'integrations.js', 'armis-veza.js'];
 
@@ -89,7 +92,7 @@ fs.writeFileSync(path.join(__dirname, 'secops-irm', 'artifact.html'), render(MOD
 // página inicial
 const css = tpl.match(/<style>[\s\S]*?<\/style>/g).find(x => x.includes('--bg:'));
 const fmt = d => { const p = d.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
-const ICONS = { 'secops-irm': 'ti-shield-lock', itsm: 'ti-headset', ham: 'ti-device-laptop', sam: 'ti-license', fsm: 'ti-truck', hrsd: 'ti-users' };
+const ICONS = { 'secops-irm': 'ti-shield-lock', itsm: 'ti-headset', ham: 'ti-device-laptop', sam: 'ti-license', fsm: 'ti-truck', hrsd: 'ti-users', spm: 'ti-chart-dots' };
 const strip = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/\s+/g, ' ').trim();
 const today = new Date().toISOString().slice(0, 10);
 const cut = (s, n) => s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n)).replace(/[,.;:]$/, '') + '…';
@@ -121,7 +124,7 @@ const featHtml = featured ? '<a class="feat" href="' + featured.url + '"><span c
 const pills = '<button type="button" class="chip" data-hm="all" aria-pressed="true">Todos</button>' + summaries.map(({ m }) => '<button type="button" class="chip" data-hm="' + m.slug + '" aria-pressed="false">' + m.short + '</button>').join('');
 const dataJs = 'window.RADAR_HOME=' + JSON.stringify(INDEX.map(x => Object.assign({}, x))) + ';';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
-const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: SecOps & IRM, ITSM, HAM, SAM, FSM e HRSD.') +
+const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: SecOps & IRM, ITSM, HAM, SAM, FSM, HRSD e SPM.') +
 `<title>Radar ServiceNow</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,7 +137,7 @@ ${css}
 <style>
 .brand{font-family:var(--display);font-size:clamp(2rem,5vw,2.8rem);font-weight:700;margin:0;line-height:1.1}
 .brand em{font-style:normal;color:var(--bar)}
-.rail{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .rc{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
 .rc:hover{border-color:var(--accent);transform:translateY(-2px)}
 .rc i{font-size:26px;color:var(--accent)}
@@ -163,7 +166,6 @@ ${css}
 .ht{font-weight:600}
 .hk{display:block;font-size:.85rem;color:var(--muted)}
 .hcount{font-size:.88rem;color:var(--muted)}
-@media (max-width:900px){ .rail{grid-template-columns:repeat(3,minmax(0,1fr))} }
 @media (max-width:560px){ .rail{grid-template-columns:repeat(2,minmax(0,1fr))} .hfeed li a{grid-template-columns:minmax(0,1fr)} .hd,.hm{padding-top:0} }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">

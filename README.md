@@ -12,6 +12,7 @@ Um radar para cada módulo da ServiceNow: novidades oficiais resumidas, com caso
 | SAM | https://ilazyfeel.github.io/radar-servicenow/sam/ |
 | FSM | https://ilazyfeel.github.io/radar-servicenow/fsm/ |
 | HRSD | https://ilazyfeel.github.io/radar-servicenow/hrsd/ |
+| SPM | https://ilazyfeel.github.io/radar-servicenow/spm/ |
 
 Todo o conteúdo vem de fontes públicas: documentação oficial da ServiceNow, newsroom, ServiceNow Community e documentação dos fabricantes. Cada item traz o link da fonte.
 
