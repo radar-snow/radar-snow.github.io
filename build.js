@@ -151,6 +151,7 @@ const comHtml = '<section class="com" aria-labelledby="com-h">\n    <h2 id="com-
   (allComs.length
     ? '<ul>' + allComs.slice(0, 3).map(c => '<li>' + (c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : '') +
         '<span class="ct"><a href="comunicados/#' + c.id + '">' + c.title + '</a></span>' +
+        (c.prazo ? '<span class="cp">Prazo: ' + c.prazo + '</span>' : '') +
         (c.text ? '<span class="cx">' + c.text + '</span>' : '') + '</li>').join('') + '</ul>'
     : '<p class="cx">Nenhum comunicado no momento.</p>') +
   '\n    <a class="cmore" href="comunicados/">Ver todos os comunicados &#8594;</a>\n  </section>';
@@ -177,6 +178,16 @@ ${css}
 .citem .cb{color:var(--muted)}
 .citem .cb p{margin:.4em 0}
 .citem .cl{font-weight:600;color:var(--accent)}
+.cmeta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.cref,.csrc{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.cprazo{margin:0;align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:.92rem;padding:4px 12px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.cprazo strong{color:inherit}
+.citem h3{font-size:1rem;margin:14px 0 4px;color:var(--fg)}
+.citem ul{margin:0;padding-left:1.2em}
+.citem li{margin:3px 0}
+.citem .cb code{overflow-wrap:anywhere}
+.clinks a{color:var(--accent)}
+.cn{color:var(--muted);font-size:.9em}
 .cempty{color:var(--muted)}
 .top h1 i{color:var(--accent);margin-right:10px}
 </style>
@@ -186,18 +197,20 @@ ${css}
       <span class="label"><a class="homelink" href="../">← Radar ServiceNow</a> · Comunicados</span>
       ${themeBlock}
     <h1><i class="ti ti-speakerphone" aria-hidden="true"></i>Comunicados</h1>
-    <p>Avisos do time sobre o Radar e sobre os módulos, do mais recente para o mais antigo. Não são publicações da ServiceNow.</p>
+    <p>Avisos do time e comunicados da ServiceNow que pedem atenção ou ação, do mais recente para o mais antigo.</p>
   </header>
   <main class="clist">
 ${allComs.length ? allComs.map(c => `    <article class="citem" id="${c.id}">
-      ${c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : ''}
+      <div class="cmeta">${c.date ? '<span class="cd">' + fmt(c.date) + '</span>' : ''}${c.ref ? '<span class="cref">' + c.ref + '</span>' : ''}${c.source ? '<span class="csrc">' + c.source + '</span>' : ''}</div>
       <h2>${c.title}</h2>
+      ${c.prazo ? '<p class="cprazo"><i class="ti ti-calendar-due" aria-hidden="true"></i><strong>Prazo:</strong> ' + c.prazo + '</p>' : ''}
       ${c.text ? '<p class="cx">' + c.text + '</p>' : ''}
       ${c.body ? '<div class="cb">' + c.body + '</div>' : ''}
+      ${(c.links || []).length ? '<div class="clinks"><h3>Referências</h3><ul>' + c.links.map(l => '<li><a href="' + l.url + '">' + l.title + '</a>' + (l.note ? ' <span class="cn">(' + l.note + ')</span>' : '') + '</li>').join('') + '</ul></div>' : ''}
       ${c.url ? '<a class="cl" href="' + c.url + '">Saiba mais &#8594;</a>' : ''}
     </article>`).join('\n') : '    <p class="cempty">Nenhum comunicado no momento.</p>'}
   </main>
-  <p class="notes">Comunicados são escritos pelo time que mantém o Radar. As novidades da ServiceNow ficam nas páginas de cada módulo.</p>
+  <p class="notes">Comunicados reúnem avisos do time e comunicados oficiais da ServiceNow repassados pelo time (identificados pelo número COMM). Textos em português são tradução e resumo; vale o original da ServiceNow. As novidades de produto ficam nas páginas de cada módulo.</p>
 </div>
 ` + foot;
 fs.writeFileSync(path.join(__dirname, 'comunicados', 'index.html'), comPage);
@@ -234,7 +247,8 @@ ${css}
 .com ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .com li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;align-items:baseline}
 .com li+li{border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding-top:10px}
-.cd{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 2}
+.cd{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 3}
+.cp{grid-column:2;justify-self:start;font-size:.8rem;font-weight:600;padding:1px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
 .ct{font-weight:700}
 .ct a{color:inherit}
 .cx{grid-column:2;color:var(--muted);font-size:.95rem}
