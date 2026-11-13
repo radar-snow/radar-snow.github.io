@@ -115,99 +115,66 @@ for (const { m, eds, ints } of summaries) {
 const news = INDEX.filter(x => x.k === 'n').sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.alert - a.alert));
 const latestDate = news.length ? news[0].date : '';
 const featured = news.filter(x => x.date === latestDate).sort((a, b) => b.alert - a.alert)[0] || news[0];
-const rail = summaries.map(({ m, latest }) => {
-  const isNew = latest && (Date.parse(today) - Date.parse(latest.date)) / 864e5 <= 7;
-  return '<a class="rc" href="' + m.slug + '/"><i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i><span class="rn">' + m.short + '</span>' +
-    '<span class="rm">' + (latest ? latest.items.length + ' itens · ' + fmt(latest.date) : 'sem edições') + '</span><span class="rs">&#8635; ' + m.sched.replace('toda ', '').replace(', por volta das ', ' · ') + '</span>' + (isNew ? '<span class="dot" title="Edição nova nesta semana"></span>' : '') + '</a>';
+const focusMod = featured ? featured.mod : '';
+const tiles = summaries.map(({ m, latest }) => {
+  const focus = m.slug === focusMod;
+  const when = latest ? 'Atualizado em ' + fmt(latest.date) : 'Sem edições ainda';
+  const next = '&#8635; ' + m.sched.replace('toda ', '').replace(', por volta das ', ' · ');
+  return '<a class="tile' + (focus ? ' focus' : '') + '" href="' + m.slug + '/"' + (focus ? ' aria-label="' + m.short + ', módulo em foco esta semana"' : '') + '>' +
+    '<i class="ti ' + ICONS[m.slug] + '" aria-hidden="true"></i>' +
+    '<span class="tn">' + m.short + '</span>' +
+    '<span class="tl">' + m.label + '</span>' +
+    '<span class="tw">' + (focus ? '<strong>Em foco</strong> · ' : '') + when + '</span>' +
+    '<span class="ts">' + next + '</span></a>';
 }).join('\n');
-const featHtml = featured ? '<a class="feat" href="' + featured.url + '"><span class="label fk">Destaque da semana · ' + featured.short + (featured.alert ? ' · ação' : '') + '</span><span class="ft">' + featured.title + '</span><span class="fl">' + featured.lede + '</span><span class="fgo">Abrir ' + featured.short + ' →</span></a>' : '';
-const pills = '<button type="button" class="chip" data-hm="all" aria-pressed="true">Todos</button>' + summaries.map(({ m }) => '<button type="button" class="chip" data-hm="' + m.slug + '" aria-pressed="false">' + m.short + '</button>').join('');
-const dataJs = 'window.RADAR_HOME=' + JSON.stringify(INDEX.map(x => Object.assign({}, x))) + ';';
+const featLine = featured ? '<a class="featline" href="' + featured.url + '"><span class="label">Destaque da semana · ' + featured.short + '</span><span class="fltxt">' + featured.title + '</span><span class="flgo" aria-hidden="true">→</span></a>' : '';
 const themeBlock = tpl.match(/<div class="seg theme"[\s\S]*?<\/script>/)[0];
-const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: SecOps & IRM, ITSM, HAM, SAM, FSM, HRSD e SPM.') +
+const homeHtml = head('Radar ServiceNow', 'Novidades oficiais da ServiceNow por módulo: ' + MODULES.map(m => m.short).join(', ') + '.') +
 `<title>Radar ServiceNow</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <script>
 /* links antigos (antes de existir um link por módulo) apontavam para SecOps & IRM */
 (function(){ var h=location.hash; if(/^#(integracoes|armis-veza|arquivo|edicao-\\d+|int-[a-z0-9-]+)$/.test(h)) location.replace('secops-irm/'+h); })();
 </script>
 ${css}
 <style>
-.brand{font-family:var(--display);font-size:clamp(2rem,5vw,2.8rem);font-weight:700;margin:0;line-height:1.1}
+.shell{max-width:1040px;gap:36px;padding-block:48px 64px}
+.brand{font-family:var(--display);font-size:clamp(2.2rem,5vw,3rem);font-weight:700;margin:0;line-height:1.05}
 .brand em{font-style:normal;color:var(--bar)}
-.rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.rc{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
-.rc:hover{border-color:var(--accent);transform:translateY(-2px)}
-.rc i{font-size:26px;color:var(--accent)}
-.rn{font-family:var(--display);font-weight:700;font-size:1.15rem}
-.rm{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.rs{font-size:.75rem;color:var(--accent);font-variant-numeric:tabular-nums}
-.dot{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--bar)}
-.feat{display:flex;flex-direction:column;gap:6px;padding:22px 24px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:inset 4px 0 0 var(--bar);text-decoration:none;color:var(--fg)}
-.feat:hover{border-color:var(--accent)}
-.fk{color:var(--accent)}
-.ft{font-family:var(--display);font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;line-height:1.2;text-wrap:balance}
-.fl{color:var(--muted);max-width:75ch}
-.fgo{font-weight:600;color:var(--accent);font-size:.95rem}
-.find{display:flex;flex-direction:column;gap:12px}
-.sbox{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 18px}
-.sbox:focus-within{border-color:var(--accent)}
-.sbox svg{flex:none;color:var(--muted)}
-.sbox input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1.05rem;color:var(--fg);padding:10px 0;outline:none}
-.hpills{display:flex;flex-wrap:wrap;gap:6px}
-.hfeed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px}
-.hfeed li a{display:grid;grid-template-columns:72px 92px minmax(0,1fr);gap:12px;padding:12px 18px;text-decoration:none;color:var(--fg);border-top:1px solid var(--line)}
-.hfeed li:first-child a{border-top:0}
-.hfeed li a:hover{background:var(--hover)}
-.hd{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
-.hm{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);padding-top:3px}
-.ht{font-weight:600}
-.hk{display:block;font-size:.85rem;color:var(--muted)}
-.hcount{font-size:.88rem;color:var(--muted)}
-@media (max-width:560px){ .rail{grid-template-columns:repeat(2,minmax(0,1fr))} .hfeed li a{grid-template-columns:minmax(0,1fr)} .hd,.hm{padding-top:0} }
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:20px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+.tile:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tile i{font-size:28px;color:var(--accent);margin-bottom:10px}
+.tn{font-family:var(--display);font-weight:700;font-size:1.35rem;line-height:1.15}
+.tl{font-size:.88rem;color:var(--muted);margin-bottom:10px}
+.tw{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ts{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tile.focus{background:var(--bar);border-color:var(--bar);color:#000}
+.tile.focus i,.tile.focus .tl,.tile.focus .tw,.tile.focus .ts{color:#000}
+.tile.focus .tw strong{font-weight:700}
+.tile.focus:hover{border-color:#000}
+.featline{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
+.featline .label{color:var(--accent)}
+.fltxt{flex:1;min-width:0;font-weight:600}
+.flgo{color:var(--accent);font-weight:700}
+.featline:hover .fltxt{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:520px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile{padding:16px} .tl{display:none} }
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <div class="shell">
   <header class="top">
     <div class="toprow">
       <span class="label">ServiceNow · novidades oficiais por módulo</span>
       ${themeBlock}
     <h1 class="brand">Radar<em>.</em> ServiceNow</h1>
-    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no card (horário de Brasília).</p>
+    <p>Novidades oficiais da ServiceNow por módulo, com casos de uso, tutoriais e links para as fontes. Cada módulo é atualizado uma vez por semana, no dia e horário indicados no bloco (horário de Brasília).</p>
   </header>
-  <nav class="rail" aria-label="Módulos">
-${rail}
+  <nav class="tiles" aria-label="Módulos">
+${tiles}
   </nav>
-  ${featHtml}
-  <section class="find" aria-label="Buscar nas novidades">
-    <label class="sbox" for="hq"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input id="hq" type="search" placeholder="Buscar em todos os módulos: USEM, SAP, e-signature, Tenable..." autocomplete="off"></label>
-    <div class="hpills" role="group" aria-label="Filtrar por módulo">${pills}</div>
-    <span class="hcount" id="hcount"></span>
-    <ul class="hfeed" id="hfeed"></ul>
-  </section>
-<script>${dataJs}</script>
-<script>
-(function(){
-  var D=window.RADAR_HOME||[], st={q:"",m:"all"};
-  function fmt(d){ if(!d) return "guia"; var p=d.split("-"); return p[2]+"/"+p[1]; }
-  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-  function render(){
-    var q=st.q, list=D.filter(function(x){ return (st.m==="all"||x.mod===st.m) && (q ? x.hay.indexOf(q)>-1 : x.k==="n"); });
-    list.sort(function(a,b){ return (b.date||"").localeCompare(a.date||"") || (b.alert-a.alert); });
-    var shown=q?list:list.slice(0,12);
-    document.getElementById("hcount").textContent = q ? list.length+" resultado"+(list.length===1?"":"s")+" para \\""+q+"\\"" : "Últimas novidades"+(st.m==="all"?" de todos os módulos":"");
-    document.getElementById("hfeed").innerHTML = shown.length ? shown.map(function(x){
-      return '<li><a href="'+x.url+'"><span class="hd">'+fmt(x.date)+'</span><span class="hm">'+esc(x.short)+'</span><span><span class="ht">'+esc(x.title)+'</span><span class="hk">'+esc(x.kicker)+'</span></span></a></li>';
-    }).join("") : '<li><a href="#" onclick="return false"><span class="hd">—</span><span class="hm"></span><span class="ht">Nada encontrado. Tente outro termo ou limpe o filtro.</span></a></li>';
-    document.querySelectorAll("[data-hm]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-hm")===st.m)); });
-  }
-  document.getElementById("hq").addEventListener("input", function(e){ st.q=e.target.value.trim().toLowerCase(); render(); });
-  document.addEventListener("click", function(e){ var b=e.target.closest("[data-hm]"); if(!b) return; st.m=b.getAttribute("data-hm"); render(); });
-  render();
-})();
-</script>
+  ${featLine}
   <p class="notes">Fontes: documentação oficial da ServiceNow (release notes), newsroom e posts da ServiceNow na Community. Não é um produto oficial da ServiceNow. As sugestões de aplicação são interpretação e vêm marcadas como tal.</p>
 </div>
 ` + foot;
