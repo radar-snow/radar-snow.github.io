@@ -71,6 +71,42 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "added": "2026-11-16",
+          "level": "servicenow",
+          "status": "sem solução",
+          "date": "2026-04",
+          "problem": "Integração Tenable da VR leva de 15 a 20 horas por execução; o suporte atribuiu o atraso a \"queue time\" (sem mensagem de erro)",
+          "fix": "Sem solução confirmada. O usuário já tinha aumentado data sources e import jobs (de 4 para 20) e nós de PROD, sem ganho. Um funcionário da ServiceNow sugeriu investigar: business rules, flows e notificações disparando nas tabelas de vulnerabilidade durante o import; índice nos campos de coalesce do transform map; concorrência com outros jobs pesados (<code>sys_trigger</code>); limpeza das tabelas de staging; gargalo no MID Server; se o pull é delta ou export completo; e comparar os horários de fila e início em <code>sys_import_set_run</code>. <em>Sugestão:</em> teste em sub-prod com as business rules desativadas para isolar a causa.",
+          "src": {
+            "title": "Tenable.io compliance integration job (sugestões de funcionário ServiceNow, abr/2026, sem solução aceita)",
+            "url": "https://www.servicenow.com/community/developer-forum/tenablei-o-complaince-integration-job/m-p/3522035"
+          }
+        },
+        {
+          "added": "2026-11-16",
+          "level": "comunidade",
+          "status": "resolvido",
+          "date": "2025-09",
+          "problem": "Tenable.sc Fixed Vulnerabilities Integration falhando (erro 403 do Tenable.sc, mostrado só em captura de tela)",
+          "fix": "Um funcionário da ServiceNow perguntou se era 403 do Tenable.sc, disse que tem visto esse caso com mais frequência e indicou abrir chamado com a ServiceNow e com a Tenable. A solução aceita, do próprio autor: era permissão do usuário da API no Tenable.sc; depois de dar a permissão correta, a integração voltou a funcionar.",
+          "src": {
+            "title": "Tenable.sc Fixed Vulnerabilities Integration failing (solução do autor; funcionário ServiceNow respondeu, ago-set/2025)",
+            "url": "https://www.servicenow.com/community/secops-forum/tenable-sc-fixed-vulnerabilities-integration-failing/m-p/3363352"
+          }
+        },
+        {
+          "added": "2026-11-16",
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-02",
+          "problem": "\"Error: Invalid response code received from TenableSCAssetsIntegration: 403. Access denied.\" mesmo sem datas definidas na instalação",
+          "fix": "Sem solução na thread. A sugestão de outra thread (ajustar as datas da integração) não resolveu para o autor. <em>Sugestão:</em> como em outros 403 do Tenable.sc registrados aqui, revise primeiro as permissões e o repositório do usuário da API no Tenable.sc.",
+          "src": {
+            "title": "Error: Invalid response code received from TenableSCAssetsIntegration (Community, fev/2025, sem resposta de funcionário)",
+            "url": "https://www.servicenow.com/community/secops-forum/error-invalid-response-code-received-from/m-p/3188583"
+          }
+        },
+        {
           "added": "2026-11-09",
           "level": "comunidade",
           "status": "contorno",
@@ -2076,6 +2112,18 @@ window.RADAR_INT = {
         "Envie uma notificação de teste para um grupo pequeno e acompanhe o workflow no Crisis Management workspace."
       ],
       "issues": [
+        {
+          "added": "2026-11-16",
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2025-10",
+          "problem": "Conector OOB do Everbridge para BCM: \"Only Basic Auth is supported\"; não há opção de OAuth",
+          "fix": "Pergunta sem resposta na Community (nem de funcionário da ServiceNow). <em>Sugestão:</em> o aviso de Basic Authentication no topo desta aba trata de chamadas <strong>de entrada</strong> na instância. Aqui é a instância chamando o Everbridge, mas vale confirmar com a ServiceNow e com a Everbridge se há roadmap de OAuth para o conector.",
+          "src": {
+            "title": "BCM Integration with Everbridge using OOB Connector (Community, out/2025, sem respostas)",
+            "url": "https://www.servicenow.com/community/grc-forum/bcm-integration-with-everbridge-using-oob-connector/m-p/3414826"
+          }
+        },
         {
           "level": "comunidade",
           "status": "sem solução",

@@ -4,6 +4,217 @@
 window.RADAR = {
   editions: [
     {
+      "id": 2,
+      "date": "2026-11-16",
+      "period": "semana de 09/11 a 16/11/2026 (com itens de BCM e Operational Resilience de outubro que ficaram fora da edição nº 1)",
+      "summary": [
+        {
+          "tag": "IRM",
+          "module": "irm",
+          "html": "<strong>Agentic AI for Continuous Controls Monitoring</strong> foi anunciado em 10/11: agentes configuram testes de controle, abrem ticket quando um controle falha e podem corrigir dentro de políticas definidas. São mais de 100 integrações prontas."
+        },
+        {
+          "tag": "prazo",
+          "module": "warn",
+          "html": "<strong>O CCM atrasou.</strong> Em agosto a previsão era dezembro/2026. Agora a GA está prevista para o <strong>1º trimestre de 2027</strong>. Se você contava com ele para o fechamento do ano, replaneje."
+        },
+        {
+          "tag": "BCM",
+          "module": "irm",
+          "html": "<strong>BCM na Store (Brazil):</strong> recovery tasks importadas e exportadas pelo Excel, ownership por grupo em BIA, planos e eventos, integração com o GRC Issue e suporte a knowledge graph (outubro)."
+        },
+        {
+          "tag": "Op. Resilience",
+          "module": "irm",
+          "html": "<strong>Solução de Operational Resilience para serviços financeiros</strong> já disponível (anúncio de 15/10). Ela junta governança de IA, risco e segurança numa visão só para CRO e CISO."
+        },
+        {
+          "tag": "SecOps",
+          "module": "secops",
+          "html": "Semana sem release nova de SecOps. No radar de erros entraram três casos de Tenable (import lento, dois 403 no Tenable.sc) e a falta de OAuth no conector do Everbridge para BCM."
+        }
+      ],
+      "items": [
+        {
+          "module": "irm",
+          "subs": [
+            "Policy & Compliance",
+            "Estratégia e agentes"
+          ],
+          "alert": true,
+          "kicker": "Integrated Risk Management · anúncio de 10/11/2026",
+          "title": "Continuous Controls Monitoring com agentes de IA, agora previsto para o 1º tri/2027",
+          "rows": [
+            [
+              "O que mudou",
+              "A ServiceNow anunciou capacidades agênticas de monitoramento contínuo de controles no IRM. Agentes ajudam a configurar os testes, interpretam o resultado e sinalizam controles com desvio ou falha. Quando um controle falha, o sistema abre ticket e pode remediar automaticamente dentro de políticas definidas."
+            ],
+            [
+              "Como funciona",
+              "<ul><li><strong>Control orchestration:</strong> liga cada controle às ferramentas que o aplicam.</li><li><strong>Compliance Graph:</strong> cruza sinais de vários sistemas para mostrar o que está em risco.</li><li><strong>Unified control mapping:</strong> um controle testado uma vez conta para vários frameworks (SOX, PCI-DSS, ISO 27001, HIPAA, EU AI Act).</li><li><strong>Access Graph</strong> (parte do Context Engine): acompanha o ciclo de vida de acessos de pessoas, máquinas e agentes de IA e confirma a revogação no desligamento.</li><li>Visões por linha de defesa e integração com o <strong>Super Intelligence Control Tower</strong>.</li></ul>"
+            ],
+            [
+              "Integrações",
+              "Mais de 100 integrações prontas: cloud, containers, IA, SaaS, on-premises, ferramentas de negócio e sistemas de identidade. O anúncio diz que o monitoramento chega também a ativos OT, IoT e dispositivos médicos."
+            ],
+            [
+              "Prazo",
+              "A GA está prevista para o <strong>1º trimestre de 2027</strong>. O anúncio de 04/08/2026 previa dezembro/2026. A nota de 10/11 não cita Armis, Veza nem licenciamento."
+            ],
+            [
+              "Por que importa",
+              "Hoje o IRM já monitora controles em SecOps, ITSM, ITAM e CMDB. Com o CCM, a coleta de evidência deixa de ser periódica e manual também fora da plataforma, o que reduz o trabalho de auditoria e de atestação."
+            ]
+          ],
+          "suggestion": "Use a espera até o 1º tri como preparação: (1) liste os controles automatizáveis (acesso, configuração, patch, criptografia) e as ferramentas que geram a evidência de cada um; (2) revise o mapeamento de controles entre frameworks no Policy &amp; Compliance, porque o \"unified control mapping\" depende de controles bem racionalizados; (3) se você já usa Configuration Compliance, o monitoramento contínuo atual entre Configuration Compliance e Policy &amp; Compliance é um bom piloto.",
+          "sources": [
+            {
+              "title": "ServiceNow Brings Agentic Monitoring to Every Control in the Enterprise at Machine Speed",
+              "url": "https://newsroom.servicenow.com/press-releases/details/2026/ServiceNow-Brings-Agentic-Monitoring-to-Every-Control-in-the-Enterprise-at-Machine-Speed/",
+              "note": "Newsroom, 10/11/2026"
+            },
+            {
+              "title": "ServiceNow delivers Autonomous Security",
+              "url": "https://newsroom.servicenow.com/press-releases/details/2026/ServiceNow-delivers-Autonomous-Security-the-industrys-most-complete-security-offering/default.aspx",
+              "note": "Newsroom, 04/08/2026, com a previsão anterior de dezembro"
+            }
+          ]
+        },
+        {
+          "module": "irm",
+          "subs": [
+            "BCM"
+          ],
+          "kicker": "Business Continuity Management · Store, set–out/2026 (Brazil)",
+          "title": "BCM: recovery tasks no Excel, ownership por grupo e integração com o GRC Issue",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li><strong>Business Continuity Management Advanced 2.0.3</strong> (set/2026): issues mais rápidas de registrar e resumir, com validação no Foundation e no Advanced e plano de resolução automatizado no Advanced; ownership por grupo em BIA, planos e eventos; sincronização de owner e contributors na BIA; integração com o módulo GRC Issue; import e export de recovery tasks pelo Excel; melhor colaboração entre recovery teams durante a crise; correções de desempenho no Crisis Map.</li><li><strong>GRC: Business Continuity Planning 12.0.7</strong> (set/2026): abas \"My group's\" em My Tasks, reordenação de tarefas no Gantt por dependência e recovery teams no nível global.</li><li><strong>Outubro/2026:</strong> BCP 12.1.2 traz suporte a knowledge graph para os apps de BCM. O BCM Advanced 2.1.2 só atualiza os apps de BCM e de AI Platform para as versões de outubro.</li></ul>"
+            ],
+            [
+              "Everbridge",
+              "As release notes não citam mudança na integração com o Everbridge. O guia de integração segue igual. Veja na aba Integrações o novo relato sobre a falta de OAuth no conector."
+            ],
+            [
+              "Por que importa",
+              "Planos com dezenas de recovery tasks eram montados tarefa a tarefa. O Excel acelera a carga inicial e a revisão anual. Ownership por grupo resolve o problema de plano parado quando o dono sai da empresa."
+            ]
+          ],
+          "suggestion": "Na próxima revisão anual de planos, exporte as recovery tasks de um plano piloto, revise com a área dona no Excel (owner, dependências, assignees) e reimporte. Confira o Import log antes de aprovar o plano: nomes de assignee inválidos são ignorados sem erro.",
+          "howto": [
+            {
+              "featured": true,
+              "title": "Importar e exportar recovery tasks com o Microsoft Excel",
+              "release": "Brazil · Business Continuity Management (BCM Advanced 2.0.3+)",
+              "basis": "Resumo da página oficial \"Import and export recovery tasks using Microsoft Excel\" (docs Brazil, atualizada em 10/09/2026).",
+              "prereqs": [
+                "Role <code>sn_bcm.core_viewer</code>.",
+                "Acesso de leitura aos registros citados no arquivo: CIs, usuários, assignment groups, recovery strategies, loss scenarios e planos relacionados.",
+                "A página não lista plugins obrigatórios."
+              ],
+              "path": "Workspaces &gt; Business Continuity Workspace",
+              "steps": [
+                "No Business Continuity Workspace, abra o business continuity plan e vá na aba <strong>Recovery tasks</strong>.",
+                "Na barra de ações, selecione <strong>Export to Excel</strong>, ajuste o nome se quiser e clique em <strong>Download</strong>.",
+                "Edite a planilha <strong>Recovery task</strong>: só células desbloqueadas; use as listas suspensas (Owner é lista de usuários); Additional assignees e Dependencies aceitam valores separados por vírgula.",
+                "Para atualizar, mantenha o ID numérico da tarefa. Para criar, use um ID temporário com prefixo N (ex.: N1) numa linha vazia. Ele pode ser citado em Dependencies.",
+                "Não renomeie abas nem reordene colunas. Salve em .xlsx.",
+                "Na related list Recovery tasks, selecione <strong>Import from Excel</strong>, anexe o arquivo e clique em <strong>Save</strong>.",
+                "Acompanhe em <strong>View import progress</strong> e revise as abas <strong>Import log</strong> e <strong>Transform history</strong>."
+              ],
+              "note": "A importação entra na fila e um job processa 500 linhas a cada 60 segundos. Use só arquivos gerados pelo Export to Excel. Se um assignee não existir e a validação do Excel for burlada, o nome é ignorado sem erro. Para reimportar depois de erros, desproteja a planilha (Review &gt; Unprotect Sheet), apague as linhas já importadas e repita a importação. <em>Sugestão:</em> faça o primeiro teste em sub-prod com um plano pequeno.",
+              "docUrl": "https://www.servicenow.com/docs/r/governance-risk-compliance/export-import-recovery-tasks-using-excel.html"
+            }
+          ],
+          "sources": [
+            {
+              "title": "Business Continuity Management Advanced release notes (Store Version History)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-grc-rn-business-continuity-mgmt-advanced.html",
+              "note": "atualizado em 08/10/2026"
+            },
+            {
+              "title": "GRC: Business Continuity Planning release notes (Store Version History)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-grc-rn-business-continuity-planning.html",
+              "note": "atualizado em 08/10/2026"
+            }
+          ]
+        },
+        {
+          "module": "irm",
+          "subs": [
+            "Operational Resilience",
+            "BCM",
+            "Estratégia e agentes"
+          ],
+          "kicker": "Operational Resilience · anúncio de 15/10/2026",
+          "title": "Operational Resilience para serviços financeiros já disponível; AI Passport chega no 4º tri",
+          "rows": [
+            [
+              "O que mudou",
+              "No anúncio de 15/10, a ServiceNow informou que a solução de <strong>Operational Resilience para serviços financeiros</strong> está disponível. Segundo a nota, ela junta governança de IA, risco e segurança num só lugar e dá a CROs e CISOs a mesma visibilidade em tempo real. A ideia é que bancos consigam fazer triagem, contenção e revogação de acesso dentro do prazo regulatório de notificação."
+            ],
+            [
+              "Mesmo anúncio",
+              "<strong>AI Passport</strong>: credencial que o agente de IA consulta em tempo de execução para checar o que pode fazer. Ele se baseia em CMDB, políticas de GRC e aprovações de workflow, com bloqueio gradual até um kill switch. Também foram anunciados <strong>shadow AI detection</strong> e AI Cost Management. Os três têm previsão para o 4º tri/2026. A nota passa a chamar a plataforma de governança de IA de <strong>Super Intelligence Control Tower</strong>."
+            ],
+            [
+              "Release Brazil",
+              "As release notes de Operational Resilience (v23.0.9) trazem contributors e collaborators em casos de DRIR, trilha de auditoria de mudanças nos incidentes de origem, melhorias no reporting de DORA e um job trimestral (inativo por padrão) que exporta a terminologia do register of information no CSV B_99.01."
+            ],
+            [
+              "Por que importa",
+              "Para quem já usa Operational Resilience por causa de DORA, os prazos curtos de notificação são o ponto crítico. A solução financeira e o AI Passport colocam agentes de IA no mesmo fluxo de incidente e risco."
+            ]
+          ],
+          "suggestion": "Se você atende banco: (1) ative o job trimestral de export do register of information (vem inativo e não manda e-mail) e confira o primeiro CSV; (2) inclua o \"incidente envolvendo agente de IA\" nos cenários de BCM e DRIR, porque a nota trata um agente rebelde como qualquer outro ativo exposto; (3) pergunte ao account team se a solução financeira exige SKU próprio, já que o anúncio não fala de licenciamento.",
+          "sources": [
+            {
+              "title": "ServiceNow advances its operational harness for enterprise AI with AI Passport and expanded governance capabilities",
+              "url": "https://newsroom.servicenow.com/press-releases/details/2026/ServiceNow-advances-its-operational-harness-for-enterprise-AI-with-AI-Passport-and-expanded-governance-capabilities/default.aspx",
+              "note": "Newsroom, 15/10/2026"
+            },
+            {
+              "title": "Operational Resilience release notes (Brazil)",
+              "url": "https://www.servicenow.com/docs/r/release-notes/grc-or-rn.html",
+              "note": "atualizado em 10/09/2026"
+            }
+          ]
+        },
+        {
+          "module": "irm",
+          "subs": [
+            "Advanced Risk"
+          ],
+          "kicker": "Advanced Risk · Store, out/2026",
+          "title": "Advanced Risk 23.1.2 traz o GRC Advisor para qualidade dos dados de risco",
+          "rows": [
+            [
+              "O que mudou",
+              "A versão 23.1.2 (out/2026, Brazil) adiciona uma configuração do <strong>GRC Advisor</strong> para as tabelas Risk e Risk Event. Ela ativa recursos de correção e sugestão, mas só funciona com o app Data Quality Optimization for Governance, Risk, and Compliance instalado."
+            ],
+            [
+              "Lembrete da 23.0.6",
+              "Na versão de setembro, o licenciamento passou do modelo de entitlement para identificador de plugin: é preciso instalar o app do SKU correspondente (ex.: Integrated Risk Management Professional ou Enterprise). A mesma versão permite projetos de risk assessment com várias entidades e comentário obrigatório."
+            ],
+            [
+              "Por que importa",
+              "A mudança para identificador de plugin pode deixar recursos indisponíveis depois do upgrade se o app do SKU certo não estiver instalado."
+            ]
+          ],
+          "suggestion": "Antes do upgrade para Brazil, confira com o time de plataforma qual app de SKU de IRM está instalado em cada instância. Se a base de riscos tem muitos registros incompletos, avalie o Data Quality Optimization junto com o GRC Advisor.",
+          "sources": [
+            {
+              "title": "GRC: Advanced Risk release notes (Store Version History)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-grc-rn-advanced-risk.html",
+              "note": "atualizado em 08/10/2026"
+            }
+          ]
+        }
+      ],
+      "notes": "Os itens de BCM, Operational Resilience e Advanced Risk são de outubro (Store de 08/10 e anúncio de 15/10). Eles entram agora porque ficaram de fora da edição nº 1, e o radar acompanha BCM e Operational Resilience toda semana. Não achei release de SecOps (SIR, USEM, TISC) com data entre 09 e 16/11: as páginas de Store do SIR são índices e não mostram versões novas. Sem \"Como aplicar\": o CCM ainda não tem GA nem procedimento publicado; a solução financeira de Operational Resilience e o AI Passport não têm página de procedimento nas docs; o GRC Advisor depende de outro app e não achei o procedimento oficial. A renomeação do AI Control Tower para Super Intelligence Control Tower aparece nas notas de outubro e novembro, mas a ServiceNow não publicou um comunicado específico sobre a mudança de nome."
+    },
+    {
       id: 1,
       date: "2026-11-08",
       period: "ago a nov/2026 (edição de estreia, janela ampliada)",
@@ -206,6 +417,7 @@ window.RADAR = {
 
   /* Agenda: eventos oficiais. A página esconde automaticamente os que já passaram. */
   events: [
+    {"date":"2026-11-18","module":"secops","title":"What's New &amp; What's Next for Security Case Management, Q4 2026","detail":"webinar do time de produto · SIR, TISC e Otto para SIR · 8h–9h PT (13h–14h em Brasília)","url":"https://www.servicenow.com/community/secops-events/what-s-new-amp-what-s-next-for-security-case-management-q4-2026/ev-p/3620823"},
     { date: "2026-11-18", module: "irm", title: "Workshop virtual: Business Continuity Management", detail: "10h–12h PT (15h–17h em Brasília)", url: "https://info.servicenow.com/ServiceNowExchange-SecurityandRisk-Solutions.html?cid=losn:com" },
     { date: "2026-11-19", module: "secops", title: "Office Hours: migração para USEM", detail: "online", url: "https://www.servicenow.com/community/secops-events/office-hours-unified-security-exposure-management-usem-migration/ev-p/3601125" },
     { date: "2026-12-02", module: "geral", title: "ServiceNow World Forum Paris", detail: "", url: "https://www.servicenow.com/events/world-forum/paris.html" },
