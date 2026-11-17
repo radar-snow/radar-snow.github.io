@@ -7,7 +7,7 @@ var __EXP = __D + "employee-service-management/employee-experience-foundation/";
 var __KB = "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=";
 var __IBM = "https://ibmresilient.github.io/resilient-community-apps/fn_service_now/docs/install_guide/README.html";
 window.RADAR_INT = {
-  "reviewed": "2026-11-13",
+  "reviewed": "2026-11-17",
   "release": "Brazil",
   "tag": "ITSM",
   "items": [
