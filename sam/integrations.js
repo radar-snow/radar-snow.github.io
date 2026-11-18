@@ -6,7 +6,7 @@ var __SL = __D + "saas-license-management/";
 var __SA = __D + "software-asset-management/";
 var __PROFILE_PATH = "Core UI: All &gt; Software Asset &gt; SaaS License &gt; Direct Integration Profiles · Workspace: License operations &gt; User subscriptions &gt; Direct integration profiles";
 window.RADAR_INT = {
-  "reviewed": "2026-11-13",
+  "reviewed": "2026-11-18",
   "release": "Brazil",
   "tag": "SAM",
   "items": [
