@@ -4,6 +4,34 @@ var D = "https://www.servicenow.com/docs/r/";
 window.RADAR = {
   editions: [
     {
+      id: 2,
+      date: "2026-11-19",
+      period: "13 a 19 de novembro de 2026",
+      summary: [
+        { tag: "Discovery", module: "secops", html: "<strong>Discovery Admin Workspace 1.23.0:</strong> novo papel <code>discovery_operator</code> dá acesso só de leitura ao workspace, com \"Discover now\" e exportação." },
+        { tag: "MSP", module: "secops", html: "<strong>Filtro por domínio:</strong> schedules por IP e detecção de anomalias passam a mostrar só o domínio atual, os filhos e o global." },
+        { tag: "ação", module: "warn", html: "<strong>Certificate discovery depende de app separado:</strong> sem o Certificate Inventory and Management instalado, a aba e o tile de certificados ficam indisponíveis." }
+      ],
+      items: [
+        {
+          module: "secops", subs: ["Discovery"],
+          kicker: "Discovery Admin Workspace · versão 1.23.0 (Brazil, nov/2026)",
+          title: "Discovery Admin Workspace ganha papel de operador e filtro por domínio",
+          rows: [
+            ["O que mudou", "<ul><li><strong>Papel <code>discovery_operator</code>:</strong> acesso só de leitura ao workspace. O operador vê schedules, diagnósticos, anomalias e IP inventory, roda schedules existentes com <strong>Discover now</strong>, exporta dados e muda o estado de erros (\"Mark error as\").</li><li><strong>O que ele não faz:</strong> criar, editar ou apagar schedules, usar Quick Discovery, mexer em settings ou instalar apps. As páginas Content 360, Tuning e Settings nem aparecem.</li><li><strong>Filtro por domínio:</strong> dados de schedules por IP e de detecção de anomalias aparecem só para o domínio atual, os domínios filhos e o global, nas abas Home, Schedules e Diagnostics. Schedules de cloud e de certificados ficam fora nesta versão.</li></ul>"],
+            ["Atenção no upgrade", "A descoberta de certificados agora exige instalar à parte o <strong>Certificate Inventory and Management</strong>. Sem ele, a aba Certificate Discovery fica desabilitada e o tile de certificados some na criação de schedule. Quem já tem o app instalado não o perde ao atualizar o workspace."],
+            ["Por que importa", "Dá para abrir o workspace para NOC, suporte ou times de aplicação acompanharem o Discovery sem risco de alterar configuração. Para MSPs, o filtro por domínio reduz a exposição de dados entre clientes."]
+          ],
+          suggestion: "Troque acessos de admin \"só para olhar\" pelo <code>discovery_operator</code>: por exemplo, o time de redes acompanha erros e roda Discover now depois de uma mudança, sem poder editar ranges. Antes de atualizar, confira se o seu processo usa certificate discovery e planeje a instalação do app.",
+          sources: [
+            { title: "Discovery release notes · Discovery Admin Workspace 1.23.0", url: RN + "discovery-rn.html", note: "docs oficiais" },
+            { title: "Discovery Operator role access", url: D + "it-operations-management/discovery/daw-discovery-operator-access.html", note: "docs oficiais" }
+          ]
+        }
+      ],
+      notes: "Semana curta em ITOM: as release notes de AIOps AI Specialist, CMDB, Service Mapping, Event Management, Health Log Analytics, OT Discovery e dos apps de Discovery da Store não trouxeram versões novas desde a edição nº 1. A documentação oficial não traz passo a passo para atribuir o papel, por isso esta edição não tem tutorial."
+    },
+    {
       id: 1,
       date: "2026-11-13",
       period: "release Brazil e versões da Store até nov/2026 (edição de estreia)",
