@@ -3,6 +3,84 @@ var RN = "https://www.servicenow.com/docs/r/release-notes/";
 window.RADAR = {
   editions: [
     {
+      id: 2,
+      date: "2026-11-21",
+      period: "14 a 21 de novembro de 2026",
+      summary: [
+        { tag: "release", module: "secops", html: "<strong>Brazil Patch 2m saiu em 20/11:</strong> a primeira release mensal \"m\", que junta o patch da família com a versão mais recente de todas as apps de IA." },
+        { tag: "busca", module: "secops", html: "<strong>AI Search detecta campos high-churn:</strong> campos que mudam o tempo todo podem sair do índice, o que reduz a carga de reindexação." },
+        { tag: "governança", module: "secops", html: "<strong>AI Control Tower aparece como Super Intelligence Control Tower</strong> na doc e na newsroom. Na Ignite, a ServiceNow mostrou a integração com o Microsoft Agent 365." },
+        { tag: "tutorial", module: "secops", html: "<strong>Tutorial da semana:</strong> como revisar os campos high-churn e tirá-los do índice com segurança." }
+      ],
+      items: [
+        {
+          module: "secops", subs: ["Administração"],
+          kicker: "Brazil Patch 2m · 20/11/2026",
+          title: "Releases mensais \"m\" trazem as apps de IA mais recentes junto com o patch",
+          rows: [
+            ["O que mudou", "<ul><li>O <strong>Brazil Patch 2m</strong> saiu em 20/11/2026. É a primeira release mensal identificada por um \"m\" no nome.</li><li>As releases \"m\" incluem tudo do patch base da família, <strong>a versão mais recente de todas as aplicações de IA</strong> e as dependências não-IA dessas apps.</li><li>O 2m herda as 348 correções do Brazil Patch 2 (de 05/11). Entre as correções de IA: limite de memória ao renderizar PDFs no Document Intelligence (Content Understanding), fila de eventos do AI Search que travava a indexação e links de respostas sintetizadas do AI Search que não abriam em nova aba.</li><li>As correções de segurança estão no KB3234986.</li></ul>"],
+            ["Por que importa", "Até aqui, as apps de IA chegavam pela Store, uma por uma, num ritmo diferente do patch. Com a release \"m\", um único upgrade deixa a instância com o patch e a pilha de IA atualizados."]
+          ],
+          suggestion: "Para quem atualiza a pilha de IA app por app, a release \"m\" pode virar o ciclo padrão de manutenção: menos combinações de versões para testar e menos risco de dependências desencontradas. Vale validar antes em subprodução, porque o pacote instala as apps de IA mais recentes de uma vez.",
+          sources: [
+            { title: "Brazil Patch 2m release notes", url: RN + "bp2m-release-notes.html", note: "docs oficiais" },
+            { title: "Available patches and hotfixes (datas do Patch 2 e do Patch 2m)", url: RN + "available-versions.html", note: "docs oficiais" }
+          ]
+        },
+        {
+          module: "secops", subs: ["AI Search"],
+          kicker: "AI Search · Brazil Patch 2 e Patch 2m",
+          title: "AI Search aponta os campos que mudam demais e deixa o admin tirá-los do índice",
+          rows: [
+            ["O que mudou", "<ul><li>Um job agendado analisa a indexação recente e registra os campos que mudam com muita frequência na tabela <strong>AI Search Datasource Churn Audit</strong> [ais_datasource_churn_audit], com Admin Decision <em>Pending</em>.</li><li>Cada campo recebe Frequency Score e Field Type Score (data, número e booleano pontuam alto). Um campo só é marcado como high-churn quando as duas notas são altas.</li><li>O admin decide entre <em>Exclude From Indexing</em> e <em>Continue Indexing</em>.</li><li><strong>Safety Guard:</strong> se o campo é usado em ACL, filtro de search source ou regra de result improvement, o score fica <em>Blocked</em> e o campo não pode ser excluído.</li></ul>"],
+            ["Por que importa", "Menos reindexação desnecessária, índice menor e busca mais rápida, inclusive para as respostas do Otto que dependem do AI Search."],
+            ["Cuidado", "O Safety Guard <strong>não detecta</strong> campos usados em ACL com script nem em business rule Before Query. Nesses casos, não exclua o campo."]
+          ],
+          suggestion: "Instâncias com muitos campos de status e contadores atualizados por integração tendem a ter vários candidatos. Uma revisão mensal da tabela de auditoria, junto com o time dono das ACLs, ajuda a cortar reindexação sem quebrar permissões de busca.",
+          howto: [
+            {
+              featured: true,
+              title: "Revisar campos high-churn e excluí-los da indexação",
+              release: "Brazil Patch 2 ou posterior",
+              basis: "Procedimento oficial \"Review high-churn field audit results\"",
+              prereqs: ["Papel admin", "AI Search em uso, com fontes indexadas"],
+              path: "All &gt; ais_datasource_churn_audit.list",
+              steps: [
+                "No filtro de navegação, digite <code>ais_datasource_churn_audit.list</code> e pressione Enter.",
+                "Abra um registro com Admin Decision igual a <em>Pending</em>.",
+                "Veja por que o campo foi marcado: Churn Score, Frequency Score, Field Type Score e Detection Note.",
+                "Se o Churn Score for <em>Blocked</em>, deixe o Admin Decision como <em>Pending</em>: há ACL, filtro de search source ou regra de result improvement que depende do campo.",
+                "Nos demais casos, defina o Admin Decision como <em>Exclude From Indexing</em> ou <em>Continue Indexing</em>.",
+                "Selecione Update."
+              ],
+              note: "O campo excluído continua no índice até a tabela de origem ser reindexada. Dá para desfazer trocando para Continue Indexing, mas não para voltar a Pending. Campos decididos não são reavaliados nas próximas auditorias.",
+              docUrl: "https://www.servicenow.com/docs/r/platform-administration/ai-search/review-churn-audit-results-ais.html"
+            }
+          ],
+          sources: [
+            { title: "AI Search release notes · Brazil Patch 2", url: RN + "ai-search-rn.html", note: "docs oficiais" },
+            { title: "High-churn field detection", url: "https://www.servicenow.com/docs/r/platform-administration/ai-search/high-churn-field-detection-ais.html", note: "docs oficiais" },
+            { title: "Review high-churn field audit results", url: "https://www.servicenow.com/docs/r/platform-administration/ai-search/review-churn-audit-results-ais.html", note: "docs oficiais (procedimento)" }
+          ]
+        },
+        {
+          module: "secops", subs: ["Governança de IA", "Marca"],
+          kicker: "Super Intelligence Control Tower · newsroom 17/11/2026",
+          title: "AI Control Tower aparece como Super Intelligence Control Tower e se integra ao Microsoft Agent 365",
+          rows: [
+            ["O que mudou", "<ul><li>As release notes e a newsroom já chamam o produto de <strong>Super Intelligence Control Tower</strong>. O conteúdo da Brazil continua o mesmo (políticas do ServiceNow Arc, acesso por cliente MCP no AI Gateway etc.).</li><li>A migração para a experiência redesenhada do Control Tower está documentada no KB3144679 (Now Support).</li><li>Na Microsoft Ignite (17/11), a ServiceNow mostrou o Control Tower integrado ao <strong>Microsoft Agent 365</strong>: os dois lados compartilham agentes de IA, aplicam políticas antes de o agente agir e registram as ações, inclusive as passagens entre agentes da ServiceNow e da Microsoft.</li></ul>"],
+            ["Por que importa", "Quem procura \"AI Control Tower\" na doc vai encontrar o novo nome. Para quem tem agentes nos dois ecossistemas, a integração aponta para governança num lugar só."]
+          ],
+          suggestion: "Atualize o nome em documentos internos e treinamentos para evitar confusão. Se a empresa já usa Copilot ou Agent 365, inclua o inventário de agentes da Microsoft no planejamento de governança, e confirme na doc a disponibilidade da integração antes de prometer prazo (o anúncio foi uma demonstração).",
+          sources: [
+            { title: "Super Intelligence Control Tower release notes", url: RN + "ai-control-tower-rn.html", note: "docs oficiais" },
+            { title: "Microsoft Ignite: ServiceNow delivers governable autonomous IT to Azure", url: "https://newsroom.servicenow.com/press-releases/details/2026/Microsoft-Ignite-ServiceNow-delivers-governable-autonomous-IT-to-Azure/default.aspx", note: "newsroom oficial" }
+          ]
+        }
+      ],
+      notes: "Semana de republicação em massa da doc (19/11); considerei só o que é novo de fato. A detecção de campos high-churn chegou no Brazil Patch 2 (05/11) e não tinha entrado na edição de estreia. Os recursos de Otto específicos de módulo (Virtual Agent, SIR, Platform Analytics etc.) ficam nos radares desses módulos. O resumo gerado por IA que aparece na página da doc não foi usado como fonte; o tutorial segue só o procedimento oficial."
+    },
+    {
       id: 1,
       date: "2026-11-13",
       period: "release Brazil e versões da Store até nov/2026 (edição de estreia)",
