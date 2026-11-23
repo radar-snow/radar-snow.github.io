@@ -71,6 +71,42 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "level": "servicenow",
+          "status": "ver KB",
+          "date": "2026-09",
+          "added": "2026-11-23",
+          "problem": "Tenable.sc: detecções de vários hosts diferentes caem no mesmo Discovered Item / Source CI e acabam no CI errado. O Host Uniqueness vem como \"repositoryID,hostUUID\", mas a tabela <code>sn_vul_tenable_sc_asset_import</code> não tem o campo <code>u_hostuuid</code> que o <code>generateUuid()</code> procura",
+          "fix": "Um funcionário da ServiceNow indicou o KB \"Host Uniqueness Criteria Update in Tenable SC 6.4\" (Now Support, exige login; não foi lido). Outro usuário recomendou não criar o campo nem alterar o transform OOB: compare primeiro o payload bruto de dois hosts afetados com o que o <code>generateUuid()</code> lê. Sem solução aceita na thread. Ambiente relatado: Australia, app 30.5.3, Tenable.sc 6.8.0.",
+          "src": {
+            "title": "Tenable.sc – missing property on Asset Import causing multiple hosts on one Discovered Item (funcionário ServiceNow indicou KB, set/2026)",
+            "url": "https://www.servicenow.com/community/secops-forum/tenable-sc-missing-property-on-asset-import-causing-multiple/m-p/3603603"
+          }
+        },
+        {
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2026-10",
+          "added": "2026-11-23",
+          "problem": "Plugins com severidade alterada (recast) no Tenable continuam com a severidade original na ServiceNow, embora a third-party entry tenha os campos Recasted Severity, Modified Severity e Severity (sem mensagem de erro)",
+          "fix": "Sem resposta oficial sobre o comportamento esperado. Outro cliente confirmou o mesmo comportamento. Como contorno, ele não ajusta no Tenable: usa um Risk Calculator na ServiceNow com uma lista de IDs do Tenable para forçar a severidade. <em>Sugestão:</em> abra caso no suporte para confirmar se o mapeamento do recast é esperado.",
+          "src": {
+            "title": "Vulnerability Response and Tenable.io Recasted Severities (relato de usuários, out/2026)",
+            "url": "https://www.servicenow.com/community/secops-forum/vulnerability-response-and-tenable-io-recasted-severities/m-p/3609061"
+          }
+        },
+        {
+          "level": "comunidade",
+          "status": "contorno",
+          "date": "2026-10",
+          "added": "2026-11-23",
+          "problem": "Depois do upgrade para USEM, o import de ativos do Tenable falha com \"Error: Could not write attchment\"",
+          "fix": "O próprio autor relatou a causa: o arquivo não era anexado porque o tipo JSON não estava permitido na instância. Com o upgrade, o app passou a salvar o arquivo de outra forma. Liberar o tipo de anexo JSON resolveu. <em>Sugestão:</em> confira a lista de extensões permitidas para anexos antes do upgrade.",
+          "src": {
+            "title": "USEM migration (solução do usuário na mesma thread; funcionário ServiceNow respondeu outra dúvida, out/2026)",
+            "url": "https://www.servicenow.com/community/secops-forum/usem-migration/m-p/3612663"
+          }
+        },
+        {
           "added": "2026-11-16",
           "level": "servicenow",
           "status": "sem solução",
@@ -457,6 +493,18 @@ window.RADAR_INT = {
         "Teste a volta: feche um incidente no SIR e confira o status no Defender."
       ],
       "issues": [
+        {
+          "level": "comunidade",
+          "status": "sem solução",
+          "date": "2026-11",
+          "added": "2026-11-23",
+          "problem": "Isolate Host da integração do SIR com o Microsoft Defender for Endpoint: a busca pelo IP do CI (<code>/api/machines/findbyip</code>) retorna \"Success\" com o Machine ID de <strong>outro</strong> endpoint, e o pedido de isolamento é enviado para esse ID",
+          "fix": "Sem respostas até 23/11/2026. No caso relatado, o isolamento ficou em \"Pending\" e expirou. O autor quer saber se dá para priorizar FQDN ou hostname em vez de IP e se a integração valida o <code>computerDnsName</code> retornado. <em>Sugestão:</em> exija aprovação humana no isolamento e confira o Machine ID no Defender antes de aprovar, principalmente em redes com IPs reaproveitados (VPN, NAT, DHCP).",
+          "src": {
+            "title": "MDE Isolate Host: IP lookup returned Machine ID for different endpoint (relato de usuário, nov/2026, sem resposta)",
+            "url": "https://www.servicenow.com/community/secops-forum/mde-isolate-host-ip-lookup-returned-machine-id-for-different/m-p/3620434"
+          }
+        },
         {
           "added": "2026-11-09",
           "level": "servicenow",
@@ -1099,6 +1147,30 @@ window.RADAR_INT = {
       ],
       "issues": [
         {
+          "level": "comunidade",
+          "status": "limitação",
+          "date": "2026-11",
+          "added": "2026-11-23",
+          "problem": "Detecções de Deep Scan da Qualys entram na ServiceNow, mas o campo Proof fica vazio (os Results/Proof só existem na Qualys)",
+          "fix": "Os usuários atribuem isso à API usada pela integração (<code>/api/2.0/fo/asset/host/vm/detection/</code>), que não traz o Results/Proof do Deep Scan. A API nova da Qualys (<code>/vmrs/api/1.0/host/list/detections</code>) ainda não é usada. Um usuário disse que o rollout dessa API em produção está previsto para o fim do ano. Não há resposta oficial da ServiceNow sobre suporte ou roadmap.",
+          "src": {
+            "title": "Qualys Deep Scan Results/Proof Missing from Vulnerability Response (relatos de usuários, out–nov/2026)",
+            "url": "https://www.servicenow.com/community/secops-forum/qualys-deep-scan-results-proof-missing-from-vulnerability/m-p/3616073"
+          }
+        },
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "date": "2026-11",
+          "added": "2026-11-23",
+          "problem": "Integração Qualys Host Detection falha quando a resposta da Qualys é grande demais",
+          "fix": "A Vulnerability Response 26.10.1 (Store, nov/2026) melhorou o tratamento de respostas grandes demais do Qualys Host Detection, para que a integração não falhe. Atualize o app. Para o erro \"Invalid XML response body\", veja também o KB2922891 registrado acima.",
+          "src": {
+            "title": "Vulnerability Response release notes, versão 26.10.1 (Store, nov/2026)",
+            "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-vulnerability-response.html"
+          }
+        },
+        {
           "level": "oficial",
           "status": "resolvido",
           "problem": "Anexos não aparecem nos data sources depois do import",
@@ -1353,6 +1425,18 @@ window.RADAR_INT = {
         "Confira as execuções das integrações MS TVM (máquinas e vulnerabilidades) e os VITs criados."
       ],
       "issues": [
+        {
+          "level": "oficial",
+          "status": "resolvido",
+          "date": "2026-11",
+          "added": "2026-11-23",
+          "problem": "Credenciais do Microsoft Defender for Cloud não salvam nem passam no teste, e as execuções falham, quando o Configuration Compliance não está instalado",
+          "fix": "Corrigido na versão 31.4.11 (USEM, nov/2026). A página de configuração do Defender for Cloud ganhou um banner: o <strong>Save and Test</strong> não salva credenciais fora do escopo da aplicação da integração. Troque para esse escopo antes de salvar.",
+          "src": {
+            "title": "Microsoft Defender TVM release notes, versão 31.4.11 (Store, nov/2026)",
+            "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-microsoft-defender-tvm.html"
+          }
+        },
         {
           "level": "oficial",
           "status": "ver KB",
@@ -2209,6 +2293,18 @@ window.RADAR_INT = {
         "Acompanhe o histórico de execuções e a saúde da ingestão na página de overview da integração."
       ],
       "issues": [
+        {
+          "level": "oficial",
+          "status": "mudança",
+          "date": "2026-11",
+          "added": "2026-11-23",
+          "problem": "Early Warning 1.2.5: a autenticação do Armis Early Warning passa a usar o recurso de JWKS da plataforma",
+          "fix": "A release note só diz isso. As páginas de configuração na doc ainda são de 10/09/2026, continuam pedindo <code>armis_api_url</code> e <code>armis_api_key</code> e não citam JWKS. <em>Sugestão:</em> depois do upgrade, confira o histórico de execuções e a saúde da ingestão. Se a autenticação falhar, abra caso no suporte.",
+          "src": {
+            "title": "Early Warning for Security Exposure Management release notes, versão 1.2.5 (Store, nov/2026)",
+            "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-secops-early-warning-security-exposure-mgmt.html"
+          }
+        },
         {
           "level": "oficial",
           "status": "resolvido",

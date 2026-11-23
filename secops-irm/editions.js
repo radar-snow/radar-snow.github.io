@@ -4,6 +4,263 @@
 window.RADAR = {
   editions: [
     {
+      "id": 3,
+      "date": "2026-11-23",
+      "period": "semana de 16/11 a 23/11/2026 (com as versões da Store de 05/11 que ficaram fora da edição nº 2)",
+      "summary": [
+        {
+          "tag": "prazo",
+          "module": "warn",
+          "html": "<strong>Advanced Risk 23.0.6 ou posterior:</strong> só atualizar o app não liga mais os recursos. Primeiro instale o app IRM do seu SKU. Se o Advanced Risk já estiver instalado, rode o job <strong>Handle licenses for Advanced Risk application</strong>."
+        },
+        {
+          "tag": "SecOps",
+          "module": "secops",
+          "html": "<strong>Store de novembro (05/11):</strong> correções na VR/USEM, no CVDB (flag do CISA KEV que não saía), no Configuration Compliance, na integração do Defender e na Qualys. O Early Warning da Armis passa a autenticar via JWKS."
+        },
+        {
+          "tag": "BCM",
+          "module": "irm",
+          "html": "<strong>BCM e Operational Resilience:</strong> sem release nova na semana. A novidade são os <strong>process guides atualizados</strong> no Best Practices Library (19/11), que incluem BCM, Operational Resilience, TPRM e mais sete produtos."
+        },
+        {
+          "tag": "Armis",
+          "module": "secops",
+          "html": "<strong>Armis Centrix v26.4</strong> (16/11): a timeline de cada CVE no VMDR junta CVSS, EPSS, weaponization e sinais de early warning. Também há status de saúde das integrações (early access)."
+        },
+        {
+          "tag": "Radar de erros",
+          "module": "secops",
+          "html": "Entraram oito registros. Três são de Tenable: CI errado no Tenable.sc, recast de severidade e erro de anexo depois da USEM. Os outros: isolamento de host do Defender no IP errado, Deep Scan da Qualys sem Proof e correções oficiais de Qualys, Defender for Cloud e Early Warning."
+        }
+      ],
+      "items": [
+        {
+          "module": "irm",
+          "subs": [
+            "Advanced Risk",
+            "Licenciamento"
+          ],
+          "alert": true,
+          "kicker": "Integrated Risk Management · Community (funcionário ServiceNow), 16/11/2026",
+          "title": "Advanced Risk 23.0.6+: os recursos agora dependem do app IRM do seu SKU",
+          "rows": [
+            [
+              "O que mudou",
+              "Até agora, a plataforma lia o seu entitlement para decidir quais recursos do <strong>GRC: Advanced Risk</strong> ligar. A partir da versão <strong>23.0.6</strong> (Store, set/2026, Brazil), o modelo passa a ser por \"plugin identifier\": cada SKU libera um conjunto de recursos, e você precisa instalar o app IRM correspondente. As release notes dão dois exemplos: clientes IRM Professional instalam <strong>Integrated Risk Management Professional</strong> e clientes IRM Enterprise instalam <strong>Integrated Risk Management Enterprise</strong>. O artigo da Community cita <strong>IRM for Advanced Risk</strong> para clientes IRM Advanced."
+            ],
+            [
+              "Impacto no upgrade",
+              "Atualizar só o GRC: Advanced Risk <strong>não liga</strong> os recursos certos. Em instâncias que já têm o app, depois de instalar o app do SKU os recursos só aparecem quando o job diário <strong>Handle licenses for Advanced Risk application</strong> roda, ou quando você o executa na hora. Versões anteriores à 23.0.6 continuam no modelo por entitlement."
+            ],
+            [
+              "Outras mudanças da 23.0.6",
+              "O GRC: Advanced Risk passa a estar disponível também no SKU IRM Foundation. Risk assessment projects agora aceitam várias entidades no mesmo projeto, e os comentários podem ser obrigatórios por fator, por grupo de fatores ou por tipo de assessment."
+            ],
+            [
+              "Por que importa",
+              "É a causa mais provável de \"o upgrade sumiu com recursos\" no Advanced Risk. Também afeta quem está migrando do risk legado para o Advanced Risk."
+            ]
+          ],
+          "suggestion": "Antes da próxima janela de upgrade do IRM: (1) confirme com o account team qual é o seu SKU, porque o artigo pede para instalar <em>só</em> o app que corresponde a ele; (2) inclua no plano de upgrade a instalação do app do SKU e a execução manual do job; (3) depois do upgrade, valide com um usuário de teste os recursos que você usa (multi-entity, RCSA em grid, reporting views).",
+          "howto": [
+            {
+              "featured": true,
+              "title": "Liberar os recursos do Advanced Risk pelo app IRM do seu SKU",
+              "release": "Store · GRC: Advanced Risk 23.0.6 ou posterior (família Brazil)",
+              "basis": "Guia de instalação publicado por funcionário da ServiceNow na Community (16/11/2026, editado em 17/11), conferido com as release notes da Store do GRC: Advanced Risk (versão 23.0.6).",
+              "prereqs": [
+                "Acesso de admin para instalar aplicações da Store e executar scheduled jobs.",
+                "GRC: Advanced Risk 23.0.6 ou posterior (versões anteriores seguem o modelo por entitlement).",
+                "Saber qual é o seu SKU de IRM. Se não tiver certeza, confirme com o account team antes de instalar.",
+                "O mapeamento de SKU para app fica no KB \"IRM SKU to application mapping and ARA feature availability\" (Now Support, exige login; não foi lido)."
+              ],
+              "path": "System Definition &gt; Scheduled Jobs",
+              "steps": [
+                "<strong>Instância nova (caminho preferido):</strong> instale pela Store o app IRM do seu SKU e, depois, instale ou atualize o <strong>GRC: Advanced Risk</strong>. Os recursos do SKU ficam disponíveis sozinhos.",
+                "<strong>Advanced Risk já instalado:</strong> instale o app IRM do seu SKU.",
+                "Vá em <strong>System Definition &gt; Scheduled Jobs</strong> e procure <strong>Handle licenses for Advanced Risk application</strong>.",
+                "Abra o job e selecione <strong>Execute Now</strong>. Os recursos aparecem quando o job termina.",
+                "Se não quiser rodar na hora, espere a próxima execução diária do job, que libera os recursos do mesmo jeito."
+              ],
+              "note": "Instale só o app IRM que corresponde ao seu SKU. Exemplos das release notes: IRM Professional → Integrated Risk Management Professional; IRM Enterprise → Integrated Risk Management Enterprise. <em>Sugestão:</em> faça primeiro em sub-produção e compare a lista de recursos antes e depois do job.",
+              "docUrl": "https://www.servicenow.com/community/grc-articles/advanced-risk-now-uses-sku-specific-irm-applications-for-feature/ta-p/3621974"
+            }
+          ],
+          "sources": [
+            {
+              "title": "Advanced Risk now uses SKU-specific IRM applications for feature entitlement: what you need to know",
+              "url": "https://www.servicenow.com/community/grc-articles/advanced-risk-now-uses-sku-specific-irm-applications-for-feature/ta-p/3621974",
+              "note": "Community, funcionário ServiceNow, 16/11/2026"
+            },
+            {
+              "title": "GRC: Advanced Risk release notes (versão 23.0.6)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-grc-rn-advanced-risk.html",
+              "note": "Store Version History Release Notes"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "VR / USEM",
+            "Configuration Compliance"
+          ],
+          "kicker": "Security Operations · Store, 05/11/2026",
+          "title": "Store de novembro: correções na VR/USEM, no CVDB e nas integrações Qualys, Defender e Early Warning",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li><strong>Vulnerability Response 30.10.1 (USEM):</strong> a data do Deferral Exception Until Date de AVITs é calculada certo depois da aprovação no upgrade para USEM; a Change Request criada a partir da vulnerabilidade preenche Assigned To e Assignment Group no VR Workspace; deferrals mais rápidos (consultas paginadas); fecha um vazamento de informação na barra lateral do VR Workspace (ACL no Data Broker); limpa service mapping de CIs fora da janela de 90 dias de scan.</li><li><strong>Vulnerability Response 26.10.1:</strong> volta a lógica de retry para Red Hat Security Advisories grandes; o status deferred de GitHub Secret Scanning se mantém entre sincronizações; respostas grandes demais do Qualys Host Detection não derrubam mais a integração.</li><li><strong>Central Vulnerability Database 1.2.7:</strong> o flag do CISA KEV e a due date somem quando um scan posterior deixa de reportar a CVE.</li><li><strong>Configuration Compliance 30.8.1 (USEM) e 15.11.0:</strong> remediation tasks são geradas quando um test result é reaberto; findings do Security Posture Control voltam a ser gerados nas políticas ativas.</li><li><strong>Microsoft Defender (TVM) 31.4.11:</strong> as credenciais do Defender for Cloud voltam a salvar e testar sem o Configuration Compliance instalado. Um banner avisa quando você está fora do escopo da aplicação.</li><li><strong>Early Warning 1.2.5:</strong> a autenticação do Armis Early Warning passa a usar o recurso de JWKS da plataforma.</li></ul>"
+            ],
+            [
+              "Integrações afetadas",
+              "Qualys, Microsoft Defender Vulnerability Management e Armis Early Warning. Os três cards da aba Integrações ganharam um registro no radar de erros. A página de configuração do Early Warning na doc ainda é de 10/09/2026 e continua pedindo <code>armis_api_key</code>: a release note não explica o que muda para quem já configurou."
+            ],
+            [
+              "Por que importa",
+              "O bug do KEV inflava a prioridade de VITs que já não tinham a CVE explorada. A correção da barra lateral é de segurança. Quem está no meio da migração para USEM ganha a correção das exceções."
+            ]
+          ],
+          "suggestion": "Depois de atualizar, rode um relatório de VITs com o flag KEV e compare com o número anterior: a queda mostra o que estava superpriorizado. No Early Warning, confira o histórico de execuções logo depois do upgrade para a 1.2.5 e abra caso no suporte se a autenticação falhar, já que a doc ainda não descreve o JWKS.",
+          "sources": [
+            {
+              "title": "Vulnerability Response release notes (30.10.1 e 26.10.1)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-vulnerability-response.html",
+              "note": "Store, atualizada em 05/11/2026"
+            },
+            {
+              "title": "Central Vulnerability Database release notes (1.2.7)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-vr-central-vulnerability-database.html",
+              "note": "Store"
+            },
+            {
+              "title": "Configuration Compliance release notes (30.8.1 e 15.11.0)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-config-compl.html",
+              "note": "Store"
+            },
+            {
+              "title": "Microsoft Defender TVM release notes (31.4.11)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-secops-rn-microsoft-defender-tvm.html",
+              "note": "Store"
+            },
+            {
+              "title": "Early Warning for Security Exposure Management release notes (1.2.5)",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-secops-early-warning-security-exposure-mgmt.html",
+              "note": "Store"
+            }
+          ]
+        },
+        {
+          "module": "irm",
+          "subs": [
+            "BCM",
+            "Operational Resilience",
+            "TPRM",
+            "Audit",
+            "Policy & Compliance",
+            "Regulatory Change",
+            "Privacy",
+            "Issue Management"
+          ],
+          "kicker": "Governance, Risk and Compliance · Community (funcionário ServiceNow), 19/11/2026",
+          "title": "Process guides de Risk atualizados, incluindo BCM e Operational Resilience",
+          "rows": [
+            [
+              "O que mudou",
+              "A ServiceNow publicou versões atualizadas de 10 process guides de Risk no Best Practices Library: Risk Management, Policy &amp; Compliance Management, Compliance Case Management, Audit Management, Operational Resilience, Regulatory Change Management, Issue Management (Common Core), Business Continuity Management, Third-party Risk Management e Privacy Management."
+            ],
+            [
+              "O que tem nos guias",
+              "Cada process guide descreve o processo out-of-the-box: roles, diagramas do processo, workflow de estados e boas práticas de relatórios. A biblioteca também tem success packs, scoping guides, maturity models e implementation guides."
+            ],
+            [
+              "Onde achar",
+              "No Best Practices Library, role até <strong>Browse Based on Product</strong> e escolha <strong>Governance, Risk, and Compliance</strong> em <strong>Products &amp; Platform</strong>. A biblioteca é para clientes e parceiros."
+            ],
+            [
+              "BCM",
+              "Não houve release nova de BCM, Crisis Management nem Operational Resilience nesta semana. As últimas versões na Store continuam as de outubro (BCM Advanced 2.1.2, BCP 12.1.2, Crisis Management 12.1.2, Crisis Management integration with Everbridge 12.1.2). A integração com o Everbridge não mudou."
+            ]
+          ],
+          "suggestion": "Use o guia de BCM como checklist antes da revisão anual dos planos: compare os estados e roles do guia com o que foi customizado na sua instância. Cada desvio sem motivo claro é um candidato a voltar ao padrão antes do próximo upgrade.",
+          "sources": [
+            {
+              "title": "Find newly updated Risk product process guides in the Best Practices Library",
+              "url": "https://www.servicenow.com/community/grc-articles/find-newly-updated-risk-product-process-guides-in-the-best/ta-p/3623086",
+              "note": "Community, funcionário ServiceNow, 19/11/2026"
+            },
+            {
+              "title": "Business Continuity Management Advanced release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-grc-rn-business-continuity-mgmt-advanced.html",
+              "note": "Store, sem versão nova desde 08/10/2026"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Estratégia e agentes"
+          ],
+          "kicker": "Armis · Community (funcionário ServiceNow), 16/11/2026",
+          "title": "Armis Centrix v26.4: risco da CVE numa timeline só e saúde das integrações",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li>O VMDR mostra CVSS, EPSS, weaponization confirmada, sinais de early warning e due dates de cada CVE numa timeline ou lista. Esses fatores alimentam um risk score da Armis.</li><li>As CVEs ganham nomes legíveis (ex.: \"Remote Code Execution in Google Chrome\"), que também aparecem no CSV e na API.</li><li>É possível atribuir vários collectors a um grupo de alvos de scan, e o trabalho se divide sozinho.</li><li><strong>Integration health status</strong> (early access) mostra cada execução com falha e seus eventos.</li></ul>"
+            ],
+            [
+              "Disponibilidade",
+              "As releases chegam aos tenants ao longo de algumas semanas, e parte dos recursos exige pedido de early access. A lista completa está nas release notes v26.4 no Support Portal da Armis (não lidas)."
+            ],
+            [
+              "Por que importa",
+              "É a Armis vendida de forma independente, não um app da ServiceNow. Mas os mesmos sinais de early warning já chegam à USEM pelo Early Warning (ver item da Store acima)."
+            ]
+          ],
+          "suggestion": "Se você usa Armis Centrix e USEM juntos, compare a prioridade de uma CVE no VMDR da Armis com o risk score da USEM. Divergências grandes indicam pesos diferentes nas regras de risco. Vale alinhar antes de cobrar SLA dos times.",
+          "sources": [
+            {
+              "title": "Armis Centrix v26.4 Webinar Recording: Faster CVE triage",
+              "url": "https://www.servicenow.com/community/armis-articles/armis-centrix-v26-4-webinar-recording-faster-cve-triage/ta-p/3621776",
+              "note": "Community, funcionário ServiceNow, 16/11/2026"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Estratégia e agentes"
+          ],
+          "kicker": "Leitura · Newsroom, 18/11/2026",
+          "title": "Pesquisa \"Deployed but Ungoverned\": incidentes com agentes de IA na Índia",
+          "rows": [
+            [
+              "O que é",
+              "Recorte indiano de uma pesquisa global da ServiceNow com mais de 3.700 líderes de segurança em 20 países. Na Índia, 92% das organizações tiveram um incidente de segurança com agentes de IA no último ano, e só 36% delas o contiveram em até 24 horas."
+            ],
+            [
+              "Números que ajudam a priorizar",
+              "Só 18% têm visão unificada dos agentes. 67% não conseguem agir automaticamente quando um agente se comporta de forma anômala. 37% acharam em produção agentes que segurança não conhecia."
+            ],
+            [
+              "Cuidado",
+              "É uma pesquisa encomendada pela própria ServiceNow, não uma novidade de produto."
+            ]
+          ],
+          "suggestion": "Os números servem para justificar internamente um inventário de agentes (AI Control Tower) e uma categoria de incidente de abuso de IA no SIR, como sugerido na edição nº 1.",
+          "sources": [
+            {
+              "title": "92% of Indian organisations had an AI agent security incident in the past year; only 36% of them contained it within 24 hours",
+              "url": "https://newsroom.servicenow.com/press-releases/details/2026/92-of-Indian-organisations-had-an-AI-agent-security-incident-in-the-past-year-only-36-of-them-contained-it-within-24-hours/default.aspx",
+              "note": "Newsroom, 18/11/2026"
+            }
+          ]
+        }
+      ],
+      "notes": "As versões da Store de 05/11 (VR, CVDB, Configuration Compliance, Defender TVM, Early Warning, AI Risk and Compliance 23.2.1) ficaram fora da edição nº 2 e entram agora. O tutorial da semana veio de um guia de upgrade publicado por funcionário da ServiceNow na Community. O KB citado nele (mapeamento de SKU para app) exige login e não foi lido. Sem \"Como aplicar\" nos demais itens: as release notes da Store só listam correções; a doc do Early Warning ainda não descreve o JWKS (páginas de 10/09/2026); os process guides ficam no Best Practices Library, que não foi aberto; Armis Centrix e a pesquisa não têm procedimento. O advisory de CVEs de novembro (KB3235180, Now Support) cita o AI Platform e não SecOps/IRM nas fontes públicas, por isso ficou de fora. Os anúncios do Ignite (17/11) e do Autonomous CRM (12/11) não tratam de SecOps/IRM."
+    },
+    {
       "id": 2,
       "date": "2026-11-16",
       "period": "semana de 09/11 a 16/11/2026 (com itens de BCM e Operational Resilience de outubro que ficaram fora da edição nº 1)",
@@ -417,6 +674,7 @@ window.RADAR = {
 
   /* Agenda: eventos oficiais. A página esconde automaticamente os que já passaram. */
   events: [
+    { date: "2026-11-24", module: "secops", title: "Office Hours: Security Operations Applications", detail: "ServiceNow Exchange · online, perguntas livres ao time de produto de SecOps", url: "https://www.servicenow.com/community/secops-events/servicenow-exchange-office-hours-security-operations/ec-p/3622626" },
     {"date":"2026-11-18","module":"secops","title":"What's New &amp; What's Next for Security Case Management, Q4 2026","detail":"webinar do time de produto · SIR, TISC e Otto para SIR · 8h–9h PT (13h–14h em Brasília)","url":"https://www.servicenow.com/community/secops-events/what-s-new-amp-what-s-next-for-security-case-management-q4-2026/ev-p/3620823"},
     { date: "2026-11-18", module: "irm", title: "Workshop virtual: Business Continuity Management", detail: "10h–12h PT (15h–17h em Brasília)", url: "https://info.servicenow.com/ServiceNowExchange-SecurityandRisk-Solutions.html?cid=losn:com" },
     { date: "2026-11-19", module: "secops", title: "Office Hours: migração para USEM", detail: "online", url: "https://www.servicenow.com/community/secops-events/office-hours-unified-security-exposure-management-usem-migration/ev-p/3601125" },
