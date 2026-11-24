@@ -3,6 +3,182 @@ var RN = "https://www.servicenow.com/docs/r/release-notes/";
 window.RADAR = {
   "editions": [
     {
+      "id": 2,
+      "date": "2026-11-24",
+      "period": "13 a 24 nov/2026 (Brazil Patch 2)",
+      "summary": [
+        {
+          "tag": "upgrade",
+          "module": "warn",
+          "html": "<strong>Brazil Patch 2 corrige regressão em Incident, Change, Problem e Request</strong> causada pela ativação automática do DF Advisor no upgrade (propriedade <code>com.snc.task.principal_class_filter</code>)."
+        },
+        {
+          "tag": "change",
+          "module": "secops",
+          "html": "<strong>Dynamic CI Groups voltam a gerar Affected CIs</strong> na change request: o Patch 2 corrige o unpack que não criava os registros."
+        },
+        {
+          "tag": "catálogo",
+          "module": "secops",
+          "html": "<strong>Catalog client scripts e UI policies voltam a rodar no RITM e no sc_task</strong> para quem só lê o registro (correção destacada, KB3159281)."
+        },
+        {
+          "tag": "sow",
+          "module": "secops",
+          "html": "<strong>Service Operations Workspace:</strong> correções para o erro de cross scope ao criar incidente pelo botão + e para vídeos que sumiam de artigos de conhecimento."
+        }
+      ],
+      "items": [
+        {
+          "module": "secops",
+          "subs": [
+            "Upgrade e segurança",
+            "Incident",
+            "Change"
+          ],
+          "kicker": "Brazil Patch 2 · PRB2093236",
+          "title": "Ativação automática do DF Advisor causava regressão em Incident, Change, Problem e Request",
+          "rows": [
+            [
+              "O que mudou",
+              "O Patch 2 corrige a ativação automática do DF Advisor, que causava comportamento regressivo em incident, change, problem e request depois do upgrade. O ponto central é a propriedade <code>com.snc.task.principal_class_filter</code>."
+            ],
+            [
+              "Como deve ficar",
+              "<ul><li>Em instância nova (zboot) ou atualizada sem nenhuma principal CI class configurada antes do upgrade: a propriedade deve estar <strong>vazia</strong>.</li><li>Em instância atualizada que já tinha ao menos uma principal CI class: a propriedade deve ter <strong>o mesmo valor de antes do upgrade</strong>.</li></ul>"
+            ],
+            [
+              "Por que importa",
+              "Essa propriedade filtra quais CIs aparecem nos formulários de task. Um valor errado depois do upgrade muda o que o service desk consegue selecionar em incidentes e changes."
+            ]
+          ],
+          "suggestion": "Se a instância já está na Brazil sem o Patch 2, abra <code>sys_properties</code>, procure <code>com.snc.task.principal_class_filter</code> e compare com o valor anterior ao upgrade (um clone antigo ou o histórico de versões ajuda). Inclua essa checagem no roteiro de teste de upgrade.",
+          "sources": [
+            {
+              "title": "Brazil Patch 2 release notes",
+              "url": RN + "brazil-patch-2.html",
+              "note": "docs oficiais"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Change"
+          ],
+          "kicker": "Change Management · Brazil Patch 2 · PRB2079977",
+          "title": "Dynamic CI Groups não geravam Affected CIs na change",
+          "rows": [
+            [
+              "O problema",
+              "Ao usar um Dynamic CI Group como Configuration Item ou Affected CI, o unpack terminava, mas os registros de Affected CI não eram criados, por uma falha no caminho de processamento herdado da Australia."
+            ],
+            [
+              "Impacto",
+              "Tudo o que depende dos Affected CIs fica incompleto: análise de impacto, detecção de conflitos e aprovações baseadas nos CIs afetados."
+            ],
+            [
+              "Correção",
+              "Corrigido no Brazil Patch 2."
+            ]
+          ],
+          "suggestion": "Se o time usa Dynamic CI Groups em changes, revise as changes abertas desde o upgrade e confira se a lista de Affected CIs está completa. Depois do patch, teste com uma change de exemplo antes de confiar de novo na detecção de conflitos.",
+          "sources": [
+            {
+              "title": "Brazil Patch 2 release notes",
+              "url": RN + "brazil-patch-2.html",
+              "note": "docs oficiais"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Service Catalog"
+          ],
+          "kicker": "Service Catalog e Request · Brazil Patch 2",
+          "title": "Client scripts e UI policies bloqueados no RITM e outras correções de catálogo",
+          "rows": [
+            [
+              "Correção destacada",
+              "<strong>PRB2089751 (KB3159281):</strong> catalog client scripts e UI policies não rodavam nos formulários de RITM e sc_task para usuários que conseguem ler o registro. O resolver retornava \"User doesn't have access to the item\". A regra correta: o User Criteria do item (canView) só controla o pedido no catálogo, não os registros de atendimento."
+            ],
+            [
+              "Outras correções",
+              "<ul><li><strong>PRB2089828:</strong> o histórico de stages do RITM não aparecia quando o request era cancelado pela UI action Cancel Request.</li><li><strong>PRB2091274:</strong> o Catalog Builder não mostrava as seções de UI policy e client script para quem tem <code>catalog_builder_editor</code> sem <code>catalog_admin</code>.</li><li><strong>PRB2072938:</strong> variáveis criptografadas de record producer apareciam criptografadas na visualização de listas do incidente.</li></ul>"
+            ]
+          ],
+          "suggestion": "Se o fulfillment reclamou de campos que não aparecem ou não ficam obrigatórios no RITM e no sc_task depois do upgrade, a causa provável é o PRB2089751. Leia o KB3159281 no Now Support antes de criar contorno próprio.",
+          "sources": [
+            {
+              "title": "Brazil Patch 2 release notes",
+              "url": RN + "brazil-patch-2.html",
+              "note": "docs oficiais"
+            },
+            {
+              "title": "KB3159281 (Now Support)",
+              "url": "https://hi.service-now.com/kb_view.do?sysparm_article=KB3159281",
+              "note": "KB oficial, exige login"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Service Operations Workspace"
+          ],
+          "kicker": "Service Operations Workspace · Brazil Patch 2",
+          "title": "Correções no SOW para incidentes e conhecimento",
+          "rows": [
+            [
+              "O que foi corrigido",
+              "<ul><li><strong>PRB2078372:</strong> erro de cross scope ao clicar no + do SOW para criar um incidente (ligado ao Field Encryption Starter).</li><li><strong>PRB2083677:</strong> vídeos inseridos por Insert/Edit Media eram removidos dos artigos de conhecimento e não apareciam no SOW.</li><li><strong>PRB1977691:</strong> a busca da página de categorias do catálogo não respeitava o tema escuro do SOW.</li></ul>"
+            ],
+            [
+              "Por que importa",
+              "Criar incidente pelo + é um dos atalhos mais usados pelo service desk, e artigos com vídeo costumam ser os de resolução mais rápida."
+            ]
+          ],
+          "suggestion": "Se a instância usa Field Encryption e o service desk tem reclamado de erro ao criar incidente no SOW, priorize o Patch 2. Teste também um artigo com vídeo embutido no workspace.",
+          "sources": [
+            {
+              "title": "Brazil Patch 2 release notes",
+              "url": RN + "brazil-patch-2.html",
+              "note": "docs oficiais"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Incident",
+            "IA (Otto)"
+          ],
+          "kicker": "Newsroom · Microsoft Ignite 17/11/2026",
+          "title": "Demonstração: alerta do Azure vira incidente resolvido com agentes de IA",
+          "rows": [
+            [
+              "O que foi mostrado",
+              "Um problema detectado no Azure (Azure Monitor e o agente Azure SRE) chega ao agente de AIOps da ServiceNow, que grava resumo, diagnóstico de nível 2, causa provável e próximos passos nas work notes do alerta, fecha o alerta e abre um incidente. A remediação é feita pelo ITSM junto com o agente Azure SRE, com aprovação e execução governadas."
+            ],
+            [
+              "Atenção",
+              "É uma demonstração na Ignite, não uma release com versão ou data de disponibilidade."
+            ]
+          ],
+          "suggestion": "Para quem roda carga no Azure, o anúncio mostra para onde vai o fluxo alerta → incidente. Ainda não há o que instalar: acompanhe a doc e pergunte ao account team antes de planejar.",
+          "sources": [
+            {
+              "title": "Microsoft Ignite: ServiceNow delivers governable autonomous IT to Azure",
+              "url": "https://newsroom.servicenow.com/press-releases/details/2026/Microsoft-Ignite-ServiceNow-delivers-governable-autonomous-IT-to-Azure/default.aspx",
+              "note": "newsroom oficial"
+            }
+          ]
+        }
+      ],
+      "notes": "O Brazil Patch 2 saiu em 05/11/2026, antes da edição nº 1, mas não tinha sido coberto; entra agora com as correções de ITSM. As release notes de cada app de ITSM (Change, Incident, Request, Service Catalog, SOW, Otto for ITSM) seguem sem atualização desde setembro."
+    },
+    {
       "id": 1,
       "date": "2026-11-13",
       "period": "release Brazil (set a nov/2026, edição de estreia)",

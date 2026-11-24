@@ -7,7 +7,7 @@ var __EXP = __D + "employee-service-management/employee-experience-foundation/";
 var __KB = "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=";
 var __IBM = "https://ibmresilient.github.io/resilient-community-apps/fn_service_now/docs/install_guide/README.html";
 window.RADAR_INT = {
-  "reviewed": "2026-11-17",
+  "reviewed": "2026-11-24",
   "release": "Brazil",
   "tag": "ITSM",
   "items": [
@@ -174,6 +174,15 @@ window.RADAR_INT = {
           "problem": "Aprovação com e-Signature não aparece ou não funciona pelo Teams",
           "fix": "Limitação documentada: aprovações com e-Signature ainda não são suportadas na integração ITSM com Teams. Essas aprovações precisam ser feitas na instância.",
           "src": { "title": "IT Service Management integration with Microsoft Teams", "url": __EXP + "sn-ms-teams.html" }
+        },
+        {
+          "added": "2026-11-24",
+          "level": "oficial",
+          "status": "resolvido",
+          "date": "2026-11",
+          "problem": "Usuário vincula a conta do Teams à ServiceNow e depois perde o vínculo: o scheduled job \"Expire Guest Session Identifier\" desativa os registros <code>sys_cs_consumer</code>",
+          "fix": "Corrigido no Brazil Patch 2 (PRB2079671), tanto para vínculo manual quanto automático. <em>Sugestão:</em> se o Virtual Agent no Teams pede vínculo de novo sem motivo, confira se a instância está no Patch 2 ou superior.",
+          "src": { "title": "Brazil Patch 2 release notes (PRB2079671)", "url": __D + "release-notes/brazil-patch-2.html" }
         }
       ],
       "docs": [
