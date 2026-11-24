@@ -10,7 +10,7 @@ var __BG_DEPREC = {
   "fix": "A doc da Brazil avisa que quem tem assinatura ativa ainda pode ativar o plugin por um <strong>plugin activation request</strong> (processo descrito no KB0867184). <em>Sugestão:</em> trate a Brazil como a última release suportada e planeje a substituição antes do próximo upgrade."
 };
 window.RADAR_INT = {
-  "reviewed": "2026-11-13",
+  "reviewed": "2026-11-24",
   "release": "Brazil",
   "tag": "HRSD",
   "items": [

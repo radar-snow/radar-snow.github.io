@@ -3,6 +3,95 @@ var RN = "https://www.servicenow.com/docs/r/release-notes/";
 window.RADAR = {
   "editions": [
     {
+      "id": 2,
+      "date": "2026-11-24",
+      "period": "14 a 24 nov/2026 (versões da ServiceNow Store)",
+      "summary": [
+        {
+          "tag": "IA",
+          "module": "secops",
+          "html": "<strong>Otto for Employee Experience 4.4.4:</strong> Claude Sonnet 4.6 e Google Flash 3.5 viram o padrão da skill de resumo, e os modelos antigos saem."
+        },
+        {
+          "tag": "integração",
+          "module": "secops",
+          "html": "<strong>Cornerstone OnDemand 1.5.3:</strong> corrige texto traduzido que não aparecia e a classe utilitária que não podia ser customizada."
+        },
+        {
+          "tag": "Store",
+          "module": "secops",
+          "html": "<strong>Manutenção:</strong> Employee experience taxonomy 28.3.1 com suporte à Brazil, Impact Value Management - HR 5.1.1 com correção na coleta de dados."
+        }
+      ],
+      "items": [
+        {
+          "module": "secops",
+          "subs": [
+            "IA (Otto)",
+            "Employee Center"
+          ],
+          "kicker": "ServiceNow Otto for Employee Experience · Store 4.4.4 (nov/2026)",
+          "title": "Novos modelos padrão na skill de resumo do Otto for Employee Experience",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li><strong>Claude Sonnet 4.6</strong> e <strong>Google Flash 3.5</strong> passam a ser os modelos padrão da skill de resumo.</li><li>Os modelos mais antigos de Claude e Google Flash foram retirados.</li></ul>"
+            ],
+            [
+              "Por que importa",
+              "A skill de resumo do app é a de Company News and Events, lançada na versão 2.0.3. Trocar o modelo pode mudar o tamanho e o tom dos resumos que o colaborador vê no Employee Center."
+            ]
+          ],
+          "suggestion": "Depois de atualizar o app, compare alguns resumos de notícias e eventos com os de antes. Se a comunicação interna tem um padrão de texto, valide com ela antes de liberar em produção. Se a instância apontava a skill para um modelo antigo, confira se ela continua funcionando.",
+          "sources": [
+            {
+              "title": "ServiceNow Otto for Employee Experience release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-hr-now-assist-employee-experience.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "Integrações",
+            "Employee Center"
+          ],
+          "kicker": "ServiceNow Store · versões de novembro/2026",
+          "title": "Correções no Cornerstone OnDemand e apps prontos para a Brazil",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li><strong>HR Service Delivery Integration with Cornerstone OnDemand 1.5.3:</strong> corrige o texto traduzido que não era exibido corretamente e a classe utilitária que não podia ser customizada.</li><li><strong>Employee experience taxonomy 28.3.1:</strong> atualização para suportar a release Brazil.</li><li><strong>Impact Value Management - HR 5.1.1:</strong> resolve um problema no Data Collection app de HRSD. Compatível com Zurich, Australia e Brazil.</li></ul>"
+            ],
+            [
+              "Também atualizados",
+              "Content Publishing (37.6.4), Content Experiences (33.3.4), Content Analytics (31.1.1) e Performance Analytics - Portal Analytics (30.2.2), só para suportar as versões mais novas dos apps dependentes."
+            ]
+          ],
+          "suggestion": "Quem usa a Cornerstone com títulos de treinamento em vários idiomas deve priorizar a 1.5.3, que segue as correções de localização da 1.4.1. Para quem planeja o upgrade para a Brazil, inclua a taxonomia 28.3.1 no pacote de apps da Store a atualizar.",
+          "sources": [
+            {
+              "title": "HR Service Delivery Integration with Cornerstone OnDemand release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-hr-integration-with-cornerstone-ondemand.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            },
+            {
+              "title": "Employee experience taxonomy release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-hr-employee-exp-taxonomy.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            },
+            {
+              "title": "Impact Value Management - HR release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-hr-impact-value-mgmt-hr.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            }
+          ]
+        }
+      ],
+      "notes": "Semana curta: as release notes da família Brazil de HRSD, Employee Center, Employee Center Pro e EmployeeWorks não mudaram desde setembro. As novidades vêm das versões de apps de HR na ServiceNow Store publicadas em 19/11/2026. Não houve procedimento oficial novo para virar tutorial nesta edição."
+    },
+    {
       "id": 1,
       "date": "2026-11-13",
       "period": "release Brazil (set a nov/2026, edição de estreia)",
