@@ -6,7 +6,7 @@ var __SL = __D + "saas-license-management/";
 var __SA = __D + "software-asset-management/";
 var __PROFILE_PATH = "Core UI: All &gt; Software Asset &gt; SaaS License &gt; Direct Integration Profiles · Workspace: License operations &gt; User subscriptions &gt; Direct integration profiles";
 window.RADAR_INT = {
-  "reviewed": "2026-11-18",
+  "reviewed": "2026-11-26",
   "release": "Brazil",
   "tag": "SAM",
   "items": [
@@ -192,7 +192,14 @@ window.RADAR_INT = {
       "validate": [
         "As licenças de cada serviço Salesforce aparecem no SaaS License Management com os usuários atribuídos."
       ],
-      "issues": [],
+      "issues": [
+        {
+          "added": "2026-11-26", "level": "oficial", "status": "observação", "date": "2026-05",
+          "problem": "A segurança da empresa não permite dar ao usuário de integração as permissões administrativas da doc (como Customize Application e Manage Connected Apps)",
+          "fix": "A KB diz que não é defeito: as permissões administrativas só são exigidas para recursos avançados, como license reclamation. Para só monitorar licenças bastam <strong>View Setup and Configuration</strong> e <strong>API Enabled</strong>, os escopos OAuth <code>api</code> e <code>refresh_token</code> e leitura dos objetos de usuários e licenças (às vezes <strong>View All Users</strong>). <em>Sugestão:</em> comece só com monitoramento e peça as permissões administrativas quando for ativar a recuperação de licenças.",
+          "src": { "title": "KB2936481: Configuring ServiceNow SAM Pro Integration with Salesforce CRM Using Read-Only Access", "url": "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=KB2936481" }
+        }
+      ],
       "docs": [
         { "title": "Integrating with Salesforce CRM", "url": __SL + "integrate-with-salesforce-crm.html" },
         { "title": "Create a Salesforce CRM integration (SaaS Playbook)", "url": __SL + "playbook-salesforce-crm.html" }
@@ -247,6 +254,12 @@ window.RADAR_INT = {
           "problem": "Depois do upgrade da Yokohama ou da Zurich para a Brazil, o perfil do GitHub Enterprise Cloud precisa ser reconfigurado",
           "fix": "A doc da Brazil pede para reconfigurar o integration profile e marcar o recurso opcional <strong>GitHub Spoke</strong> no Application Manager ao instalar o SaaS License Management. <em>Sugestão:</em> inclua no checklist do upgrade.",
           "src": { "title": "Integrate with GitHub Enterprise Cloud (docs oficiais)", "url": __SL + "integrate-github-cloud.html" }
+        },
+        {
+          "added": "2026-11-26", "level": "oficial", "status": "ver KB", "date": "2026-03",
+          "problem": "Integração configurada conforme a doc, mas o software model e a reclamation rule não são criados e as assinaturas importadas ficam sem Product, Publisher e Software Model; o <code>sys_outbound_http_log</code> mostra erro 404 numa das chamadas",
+          "fix": "Segundo a KB, a causa é o token do GitHub sem os escopos exigidos (a API do GitHub devolve 404 em chamadas sem autorização suficiente, mesmo com o recurso existente). A resolução é revisar o integration profile pela doc e garantir as permissões do token. <em>Sugestão:</em> confira os escopos <code>read:org</code>, <code>repo</code> e <code>read:audit_log</code> antes de abrir chamado.",
+          "src": { "title": "KB2904553: GitHub SaaS Integration Failing to Create Software Model and Download Subscriptions", "url": "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=KB2904553" }
         }
       ],
       "docs": [
