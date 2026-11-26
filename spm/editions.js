@@ -95,5 +95,9 @@ window.RADAR = {
       notes: "Edição de estreia montada a partir das release notes oficiais da família Brazil e das versões da Store dos apps de SPM. O guia de integrações deste módulo entra numa próxima versão."
     }
   ],
-  events: []
+  events: [
+    { date: "2026-11-30", module: "secops", title: "Resource Management Office Hours", detail: "Sessão semanal de perguntas com o time de Product Management de Resource Management. Segunda, 07:00 PST (12:00 em Brasília), online.", url: "https://www.servicenow.com/community/spm-events/resource-management-office-hours/ev-p/3624025" },
+    { date: "2026-12-07", module: "secops", title: "Resource Management Office Hours", detail: "Sessão semanal de perguntas com o time de Product Management de Resource Management. Segunda, 07:00 PST (12:00 em Brasília), online.", url: "https://www.servicenow.com/community/spm-events/resource-management-office-hours/ev-p/3624026" },
+    { date: "2026-12-14", module: "secops", title: "Resource Management Office Hours", detail: "Sessão semanal de perguntas com o time de Product Management de Resource Management. Segunda, 07:00 PST (12:00 em Brasília), online.", url: "https://www.servicenow.com/community/spm-events/resource-management-office-hours/ev-p/3624027" }
+  ]
 };
