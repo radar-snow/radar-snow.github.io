@@ -3,6 +3,97 @@ var RN = "https://www.servicenow.com/docs/r/release-notes/";
 window.RADAR = {
   "editions": [
     {
+      "id": 2,
+      "date": "2026-11-26",
+      "period": "13 a 26 de novembro de 2026",
+      "summary": [
+        {
+          "tag": "IA",
+          "module": "warn",
+          "html": "<strong>Otto for HAM 5.2.1</strong> aposenta os modelos genéricos Claude (small), GPT (small) e Gemini (small) e troca cada um pelo sucessor: Claude Haiku 4.5, GPT-5.4 mini e Gemini 3.5 Flash."
+        },
+        {
+          "tag": "IA",
+          "module": "secops",
+          "html": "<strong>HAM Prime e HAM Advanced 1.1.1:</strong> prompts e configurações deixam de usar referências como \"small\" ou \"large\" e passam a citar a versão exata do modelo."
+        },
+        {
+          "tag": "release notes",
+          "module": "secops",
+          "html": "As release notes da família Brazil para HAM, ITAM e EAM seguem sem mudanças desde setembro. As novidades da quinzena vieram só da Store."
+        }
+      ],
+      "items": [
+        {
+          "module": "secops",
+          "subs": [
+            "IA (Otto)",
+            "Deprecações"
+          ],
+          "kicker": "ServiceNow Otto for HAM · versão 5.2.1 (Store, novembro de 2026)",
+          "title": "Otto for HAM troca modelos genéricos aposentados pelos sucessores",
+          "rows": [
+            [
+              "O que mudou",
+              "<ul><li><strong>Aposentados:</strong> Claude (small), GPT (small) e Gemini (small), que chegaram ao fim do suporte.</li><li><strong>Substitutos:</strong> Claude Haiku 4.5, GPT-5.4 mini e Gemini 3.5 Flash. Cada modelo aposentado foi trocado pelo sucessor atual com suporte completo.</li></ul>"
+            ],
+            [
+              "Por que importa",
+              "A ServiceNow justifica a troca por confiabilidade e desempenho. Na prática, as respostas das skills de HAM (resumo do ativo, extração de pedidos de compra, sourcing) passam a vir de outro modelo, e o texto gerado pode mudar de estilo ou de tamanho."
+            ],
+            [
+              "Contexto",
+              "Segue a 5.1.0 (outubro de 2026), que trouxe suporte ao Gemma e correções para cenários com SKUs AI Native misturados."
+            ]
+          ],
+          "suggestion": "Depois de atualizar para a 5.2.1, rode em subprodução os mesmos casos de teste das skills de HAM que vocês já usam (por exemplo, o resumo de um ativo com histórico longo e a leitura de um PDF de pedido de compra) e compare com o resultado anterior. Se algum time de compliance aprovou um provedor específico de LLM, confirme que o sucessor continua dentro do que foi aprovado.",
+          "sources": [
+            {
+              "title": "ServiceNow Otto for Hardware Asset Management (HAM) release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-itam-now-assist-ham.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            }
+          ]
+        },
+        {
+          "module": "secops",
+          "subs": [
+            "IA (Otto)"
+          ],
+          "kicker": "Hardware Asset Management - Prime e - Advanced · versão 1.1.1 (Store, novembro de 2026)",
+          "title": "Pacotes Prime e Advanced passam a citar a versão exata do modelo",
+          "rows": [
+            [
+              "O que mudou",
+              "Os apps de assinatura Hardware Asset Management - Prime e Hardware Asset Management - Advanced deixam de usar referências genéricas de modelo, como \"small\" ou \"large\". Todos os prompts e configurações passam a apontar para versões específicas."
+            ],
+            [
+              "Por que importa",
+              "Fica explícito qual modelo atende cada skill. Isso facilita auditoria, aprovação de provedores de IA e diagnóstico quando uma resposta muda depois de um upgrade."
+            ],
+            [
+              "Versões anteriores",
+              "A 1.0.16 (outubro de 2026) atualizou a dependência do ServiceNow Otto for Platform (Prime ou Advanced) para a 3.1.0."
+            ]
+          ],
+          "suggestion": "Aproveite a atualização para registrar, numa planilha de governança de IA, cada skill de HAM ativa e o modelo que ela usa agora. Com a referência explícita, essa lista deixa de ficar desatualizada a cada troca de modelo.",
+          "sources": [
+            {
+              "title": "Hardware Asset Management - Prime release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-itam-hardware-asset-mgmt-prime.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            },
+            {
+              "title": "Hardware Asset Management - Advanced release notes",
+              "url": "https://www.servicenow.com/docs/r/store-release-notes/store-rn-itam-hardware-asset-mgmt-advanced.html",
+              "note": "Store Version History, atualizado em 19/11/2026"
+            }
+          ]
+        }
+      ],
+      "notes": "Conferidas as release notes da família Brazil (HAM, Otto for HAM, ITAM e EAM) e o Store Version History dos apps de HAM e EAM. Só os apps Otto for HAM, HAM Prime e HAM Advanced tiveram versões novas no período. Sem tutorial nesta edição: não há procedimento oficial publicado para as mudanças."
+    },
+    {
       "id": 1,
       "date": "2026-11-13",
       "period": "release Brazil (set a nov/2026, edição de estreia)",
