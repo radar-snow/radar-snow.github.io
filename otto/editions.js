@@ -3,6 +3,59 @@ var RN = "https://www.servicenow.com/docs/r/release-notes/";
 window.RADAR = {
   editions: [
     {
+      id: 3,
+      date: "2026-11-27",
+      period: "21 a 27 de novembro de 2026",
+      summary: [
+        { tag: "governança", module: "secops", html: "<strong>Shadow AI documentado:</strong> o AI Proxy, embutido no Agent Client Collector, intercepta chamadas a provedores de IA nos endpoints e manda os eventos para o AI Control Tower." },
+        { tag: "políticas", module: "secops", html: "<strong>Políticas do AI Control Tower</strong> bloqueiam agente, modelo ou domínio por usuário ou departamento, ou tiram um agente do ar quando há ameaça." },
+        { tag: "release", module: "secops", html: "<strong>Hotfix W48</strong> saiu em 25/11 para o Brazil Patch 2 e o Patch 2m (detalhes no KB3237605 e no KB3237607, atrás de login)." },
+        { tag: "tutorial", module: "secops", html: "<strong>Tutorial da semana:</strong> como criar uma política de bloqueio no AI Control Tower." }
+      ],
+      items: [
+        {
+          module: "secops", subs: ["Governança de IA"],
+          kicker: "AI Control Tower · Agent Client Collector · doc de 26/11/2026",
+          title: "AI Proxy leva o AI Control Tower aos endpoints para detectar e bloquear shadow AI",
+          rows: [
+            ["O que mudou", "<ul><li>A doc ganhou em 26/11 duas páginas de visão geral: <strong>AI Proxy</strong> e <strong>AI Control Tower</strong> (na seção do Agent Client Collector, famílias Brazil e Australia).</li><li>O AI Proxy é um proxy HTTPS leve dentro do Agent Client Collector (ACC). Ele intercepta chamadas de saída para provedores de IA, identifica o processo que fez a chamada e envia eventos estruturados ao AI Control Tower. Tráfego que não é de IA passa sem inspeção.</li><li>Os provedores são classificados como <em>Authorized</em> (o tráfego segue depois da checagem de política) ou <em>Unauthorized</em> (o tráfego é bloqueado).</li><li>O uso é mapeado por usuário, dispositivo e departamento. A visão geral também cita classificação de dados sensíveis (PII, dados financeiros, propriedade intelectual) em prompts e uploads, conforme política e consentimento.</li><li>Os procedimentos de instalação e de políticas já estavam na doc desde 02/10 e não tinham entrado no Radar.</li></ul>"],
+            ["Pré-requisitos", "ACC na arquitetura sem MID Server (ICS, <em>MID-less</em>), plugin ITOM Cloud Services Core (sn_itom_cloud_svc), instância habilitada no ITOM Cloud Services (via Customer Support) e o app <strong>ITOM Shadow AI governance</strong> instalado. O AI Proxy é ligado na instalação do agente com o parâmetro <code>AI_PROXY_ENABLED=\"true\"</code>. Papel: agent_client_collector_admin."],
+            ["Por que importa", "Até aqui o AI Control Tower governava a IA que roda na plataforma. Com o AI Proxy, ele passa a ver também ChatGPT, ferramentas de navegador e modelos usados direto nas máquinas, que é onde costuma estar o maior risco de vazamento de dados."],
+            ["Atenção", "As páginas novas usam o nome <strong>AI Control Tower</strong>, enquanto as release notes já falam em Super Intelligence Control Tower. É o mesmo produto."]
+          ],
+          suggestion: "Um bom começo é um piloto em modo de observação: instale o AI Proxy num grupo pequeno de máquinas, veja quais provedores aparecem e só depois classifique o que é autorizado. Combine a lista com segurança da informação e jurídico antes de bloquear, e avise os usuários, porque a inspeção de prompts envolve consentimento e LGPD.",
+          howto: [
+            {
+              featured: true,
+              title: "Criar uma política de bloqueio no AI Control Tower",
+              release: "Brazil, com ITOM Shadow AI governance",
+              basis: "Procedimento oficial \"Create AI Control Tower (AICT) policies\"",
+              prereqs: ["Papel agent_client_collector_admin", "ACC configurado sem MID Server (ICS)", "ITOM Shadow AI governance instalado"],
+              path: "All &gt; AI Control Tower &gt; AI Assets &gt; Govern &gt; Policies",
+              steps: [
+                "Navegue até <strong>All &gt; AI Control Tower &gt; AI Assets</strong>.",
+                "No filtro à esquerda, expanda <strong>Govern</strong> e selecione <strong>Policies</strong>.",
+                "Selecione <strong>Create policy</strong>.",
+                "Em <em>Choose a policy type</em>, escolha <em>An explicit block</em> (bloqueia um usuário ou departamento) ou <em>A threat response</em> (tira um agente do ar quando detecta ameaça).",
+                "Para um bloqueio: em <em>Who</em>, escolha usuário ou departamento; em <em>What</em>, escolha AI agent, model ou domain (para agente, monte o filtro de campos se precisar).",
+                "Se quiser avisar o usuário, adicione o follow-up <em>Notify</em> em <em>Add follow-up</em>.",
+                "Selecione <strong>Publish</strong>."
+              ],
+              note: "A ação aparece em Policy summary. A política é sincronizada com as políticas do Agent Client Collector, e é o ACC que a executa no endpoint. Na resposta a ameaça, o follow-up pode abrir um ticket na fila de um grupo ou notificar o usuário.",
+              docUrl: "https://www.servicenow.com/docs/r/it-operations-management/agent-client-collector/create-aict-policies.html"
+            }
+          ],
+          sources: [
+            { title: "AI Proxy", url: "https://www.servicenow.com/docs/r/it-operations-management/agent-client-collector/ai_proxy_concept.html", note: "docs oficiais (26/11/2026)" },
+            { title: "AI Control Tower (visão geral no Agent Client Collector)", url: "https://www.servicenow.com/docs/r/it-operations-management/agent-client-collector/ai-control-tower-concept.html", note: "docs oficiais (26/11/2026)" },
+            { title: "Set up an AI proxy", url: "https://www.servicenow.com/docs/r/it-operations-management/agent-client-collector/ai-proxy-setup.html", note: "docs oficiais (procedimento)" },
+            { title: "Create AI Control Tower (AICT) policies", url: "https://www.servicenow.com/docs/r/it-operations-management/agent-client-collector/create-aict-policies.html", note: "docs oficiais (procedimento)" }
+          ]
+        }
+      ],
+      notes: "Semana curta (feriado de Thanksgiving nos EUA): as release notes de AI Agent Studio, AI Control Tower, AI Agent Advisor e AI Search não mudaram desde a última edição, e a newsroom não trouxe anúncio de produto do escopo. Os hotfixes W48 de 25/11 estão em KBs atrás de login (KB3237605 e KB3237607) e não foram lidos. A página de AI Proxy não informa versão mínima do ACC nem do app ITOM Shadow AI governance, então não citei uma."
+    },
+    {
       id: 2,
       date: "2026-11-21",
       period: "14 a 21 de novembro de 2026",
