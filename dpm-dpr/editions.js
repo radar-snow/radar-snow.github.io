@@ -4,6 +4,47 @@ var D = "https://www.servicenow.com/docs/r/";
 window.RADAR = {
   editions: [
     {
+      id: 2,
+      date: "2026-11-27",
+      period: "Digital Product Release 2.7.0 (Store) e DPM sem mudanças na Brazil",
+      summary: [
+        { tag: "DPR", module: "secops", html: "<strong>Digital Product Release 2.7.0</strong> traz uma nova experiência para as políticas de release." },
+        { tag: "DPR", module: "secops", html: "<strong>Acessibilidade melhorada</strong> em todo o Digital Product Release Workspace." },
+        { tag: "DPR", module: "secops", html: "<strong>Correções</strong> no timeline da release, no Kanban de tarefas e no Release Calendar vazio." },
+        { tag: "DPM", module: "secops", html: "<strong>Release notes de DPM revisadas em 19/11</strong>: a Brazil continua sem novidades." }
+      ],
+      items: [
+        {
+          module: "secops", subs: ["DPR", "Políticas"],
+          kicker: "Digital Product Release · versão 2.7.0 (outubro de 2026)",
+          title: "Nova experiência para políticas de release e Workspace mais acessível",
+          rows: [
+            ["O que mudou", "<ul><li><strong>Políticas de release:</strong> nova experiência de usuário, com interface reformulada.</li><li><strong>Acessibilidade:</strong> melhorias em todo o Digital Product Release Workspace.</li></ul>"],
+            ["Correções", "<ul><li>O botão <strong>Add</strong> de tarefas relacionadas no escopo da release não funcionava com o nome da release vazio.</li><li>O timeline da release ficava instável em algumas configurações de fases.</li><li>Cards de tarefa no Kanban do Workspace desalinhados com os cabeçalhos das raias, e traduções faltando.</li><li>A visão Calendar do Release Calendar aparecia vazia, sem os release targets.</li></ul>"],
+            ["Por que importa", "A 2.7.0 é a versão mais recente na Store e sai depois da 2.6.2 coberta na edição anterior. Quem usa o Release Calendar ou o Kanban do Workspace ganha correções diretas."]
+          ],
+          suggestion: "Atualize primeiro em subprodução e revise as políticas de release com os donos de produto: a interface nova muda o jeito de acompanhar o status das políticas. Se o time usa leitores de tela, vale um teste rápido no Workspace.",
+          sources: [
+            { title: "Digital Product Release release notes (Store Version History)", url: D + "store-release-notes/store-rn-itsm-digital-product-release.html", note: "docs oficiais, atualizado em 08/10/2026" }
+          ]
+        },
+        {
+          module: "secops", subs: ["DPM"],
+          kicker: "Digital Portfolio Management · release Brazil",
+          title: "DPM continua sem novidades na Brazil",
+          rows: [
+            ["O que diz a doc", "As release notes combinadas de DPM foram atualizadas em 19/11/2026, mas a seção Brazil segue com <strong>\"No updates for this release\"</strong> em todas as categorias."],
+            ["Por que importa", "Nada muda no planejamento do upgrade para Brazil em relação à edição anterior."]
+          ],
+          suggestion: "Sem mudanças de produto, aproveite para revisar KPIs e solution cards já disponíveis desde Yokohama e Zurich.",
+          sources: [
+            { title: "Combined Digital Portfolio Management (DPM) release notes, Yokohama to Brazil", url: D + "delta-yokohama-brazil/brazil-yokohama-digitalportfoliomanagementdpm-release-notes.html", note: "docs oficiais, atualizado em 19/11/2026" }
+          ]
+        }
+      ],
+      notes: "A versão 2.7.0 saiu em outubro de 2026, antes da edição nº 1, mas só aparece nas Store release notes. A página principal de release notes do DPR (atualizada em 05/10/2026) ainda lista só a 2.6.2. Esta semana não houve versão nova nem procedimento oficial novo para um tutorial."
+    },
+    {
       id: 1,
       date: "2026-11-13",
       period: "Digital Product Release 2.6.2 e release Brazil (edição de estreia)",
